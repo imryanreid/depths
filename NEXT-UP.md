@@ -12,9 +12,17 @@
 warnings, light dial, level ramp, token table with pu/xt, scenarios, four
 exports, agent surfaces, 56 tests. `pnpm build && pnpm test` clean.
 
+**Deployed** — Vercel project `depths`, production at
+https://depths-delta.vercel.app (the team-scoped alias is SSO-gated; this one
+is public). GitHub: https://github.com/imryanreid/depths. Every agent surface
+verified against production with real no-JS curls: injection on `/`, head
+rewrite on parameterized URLs, `/api/shadows` JSON + text, decode warnings,
+the llms.txt family block.
+
 **Not yet live on the domain.** `depths.studio` is registered (Ry confirmed)
 but not attached to the Vercel project. Everything in the repo already says
-`www.depths.studio`.
+`www.depths.studio`. The Ramps-side registration is PR
+https://github.com/imryanreid/ramp-generator/pull/25, awaiting Ry.
 
 ## To finish the launch
 
