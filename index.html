@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Depths · Elevation and shadow tokens your agent can read</title>
+    <meta
+      name="description"
+      content="Generate a six-level elevation scale of layered box-shadows from one light source — key, ambient and contact layers, mapped to semantic tokens like shadow-raised and shadow-modal, honest about dark mode. Exports as CSS variables, a Tailwind v4 theme, DTCG design tokens, or markdown that tells a coding agent which surface gets which shadow."
+    />
+    <link rel="canonical" href="https://www.depths.studio/" />
+    <!--
+      Advertises the machine-readable form to anything that parses the head but
+      does not run scripts. Redundant now that middleware serves the scale on
+      "/" itself, and kept anyway: it is one line, it is the standard discovery
+      mechanism, and it survives if the middleware is ever removed.
+    -->
+    <link
+      rel="alternate"
+      type="application/json"
+      href="/api/shadows"
+      title="The shadow scale as JSON"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Ryan Reid" />
+    <meta name="theme-color" content="#fdfdfc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)" />
+
+    <!--
+      Raster first, SVG second: browsers that understand `type` take the SVG
+      and scale it perfectly, while everything else falls back to the PNG.
+      The PNG is not redundant — Google Search's favicon docs list neither SVG
+      among the supported formats nor anything at or below 48x48 as advisable,
+      and the SVG declares an intrinsic 32x32. Without a raster fallback a
+      search result gets the generic globe.
+      All three are generated from one shape by scripts/build-icons.py.
+    -->
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!--
+      Social unfurls. og:site_name is the brand; og:title matches <title>.
+      There is deliberately NO og:image and no twitter:card yet — no card asset
+      exists, and a card tag aimed at a 404 is worse than no card tag. Add both
+      together when the share image is designed (Motion's build-og.py or Beeps'
+      build-og.md are the patterns to steal).
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Depths" />
+    <meta property="og:url" content="https://www.depths.studio/" />
+    <meta
+      property="og:title"
+      content="Depths · Elevation and shadow tokens your agent can read"
+    />
+    <meta
+      property="og:description"
+      content="A six-level elevation scale of layered box-shadows from one light source, mapped to semantic tokens — shadow-raised, shadow-dropdown, shadow-modal — with honest dark-mode values. Exports as CSS variables, a Tailwind v4 theme, DTCG design tokens, or markdown for a coding agent."
+    />
+
+    <!--
+      Machine-readable, and deliberately specific about the part that matters:
+      this tool is meant to be handed to a coding agent, so the description
+      says what it exports and llms.txt documents the URL API. The no-JavaScript
+      claim holds because middleware routes "/" through api/render, which embeds
+      the scale in the HTML — verify with curl, never a browser, since the
+      browser is the one client that already worked.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Depths",
+        "url": "https://www.depths.studio/",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Any (web browser)",
+        "description": "Built to be handed to a coding agent: fetching any URL returns the complete shadow scale embedded in the HTML with no JavaScript required, /api/shadows returns the same data as JSON or plain text, and /llms.txt documents every parameter and every token. Generates a six-level elevation scale of layered box-shadows — key, ambient and an optional contact layer — from one light source and three curves, mapped to semantic tokens for cards, dropdowns, sticky bars, modals, toasts and pressed wells. Dark-mode values are boosted honestly and paired with hairline edge borders, because elevation on a dark surface is mostly carried by surface color. Exports to CSS variables, a Tailwind v4 theme, W3C DTCG design tokens, or agent-readable markdown.",
+        "isAccessibleForFree": true,
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Studio Tools",
+          "description": "Small, free, agent-readable design utilities."
+        },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": {
+          "@type": "Person",
+          "name": "Ryan Reid",
+          "url": "https://www.linkedin.com/in/imryanreid/"
+        },
+        "featureList": [
+          "A six-level elevation scale derived from one light source and three curves",
+          "Layered shadows — a tight key shadow, a soft ambient, and an optional contact layer",
+          "Semantic tokens: shadow-none, shadow-raised, shadow-hover, shadow-sticky, shadow-dropdown, shadow-modal, shadow-toast, and an inset shadow-pressed",
+          "A draggable light source that re-aims every shadow on the page live",
+          "Honest dark mode: boosted alphas plus hairline edge borders, with the limits stated rather than hidden",
+          "Tinted shadows from any hex color",
+          "Per-token level overrides and per-token export exclusion",
+          "Export to CSS variables, a Tailwind v4 theme, W3C DTCG design tokens, or agent-readable markdown",
+          "Readable without JavaScript — every URL embeds the complete scale in the HTML, and /api/shadows serves the same data as JSON or plain text",
+          "Shareable permalinks that encode the whole scale in the URL"
+        ]
+      }
+    </script>
+
+    <script>
+      // Set the theme before first paint so a dark-mode visitor never sees a
+      // white flash. Mirrors getInitialTheme() in src/shared/theme.ts — kept
+      // inline deliberately: a module import would run after paint, which is
+      // the whole thing this avoids.
+      try {
+        const stored = localStorage.getItem("theme")
+        const dark =
+          stored === "dark" ||
+          (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        if (dark) document.documentElement.classList.add("dark")
+      } catch {
+        /* Private mode can throw on localStorage. Light is a fine fallback. */
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+/* ==============================================
+   DEPTHS STYLESHEET
+   The shared family foundation, plus anything that
+   is only about this tool.
+
+   Everything visual comes from shared/tokens.css —
+   the fonts, the five colour tokens, dark mode, and
+   the reduced-motion block. Rules below the import
+   are for surfaces no other tool has.
+   ============================================== */
+@import "./shared/tokens.css";
+
+/* The curve sliders. A native range input, restyled to the family's chrome:
+   a hairline track and an ink thumb. The one place styling escapes Tailwind,
+   because a range input's parts are only reachable through vendor
+   pseudo-elements. */
+.depths-slider {
+  appearance: none;
+  height: 16px;
+  background: transparent;
+  cursor: pointer;
+}
+.depths-slider::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-line);
+}
+.depths-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -5px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  border: none;
+  transition: transform 150ms ease-out;
+}
+.depths-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+.depths-slider::-moz-range-track {
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-line);
+}
+.depths-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  border: none;
+}
+.depths-slider:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 4px;
+  border-radius: 999px;
+}

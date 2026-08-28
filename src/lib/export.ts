@@ -1,0 +1,279 @@
+// ==============================================
+// EXPORTERS
+// The canonical output. Everything the export panel
+// and the agent-readable block render comes from
+// here — don't add a second serialization anywhere
+// else.
+//
+// Every exporter reads exportedTokens(), so an
+// exclusion made on the page is an exclusion in the
+// file, and the CSS you copy is byte-for-byte the
+// CSS the preview is running on.
+//
+// Node-safe on purpose: the agent payload embeds
+// these outputs, and the Vercel Functions import it.
+// ==============================================
+import { cssValue, edgeValue, darkAlpha, type ResolvedScale } from "./depths.js"
+import { exportedTokens, type ResolvedToken } from "./tokens.js"
+import { PRESETS } from "./presets.js"
+import { FAMILY_BLURB, FAMILY_NAME, familyAsText } from "../shared/tools.js"
+
+// ---------- CSS ----------
+
+/**
+ * Custom properties, light in :root and dark under .dark.
+ *
+ * Edges ship in BOTH modes when the dark strategy asks for them — transparent
+ * on light — so `border: var(--edge-raised)` never shifts layout when the
+ * theme flips.
+ */
+export function toCss(scale: ResolvedScale): string {
+  const tokens = exportedTokens(scale)
+  const edges = scale.config.dark === "sb"
+
+  const lines: string[] = [":root {", "  /* Shadows */"]
+  for (const t of tokens) lines.push(`  --${t.token}: ${t.lightCss};`)
+  if (edges) {
+    lines.push("", "  /* Edges — hairlines that carry elevation where shadows can't */")
+    for (const t of tokens) {
+      if (t.effectiveLevel === 0) continue
+      lines.push(`  --edge-${t.id}: ${t.edgeLight};`)
+    }
+  }
+  lines.push("}", "")
+
+  lines.push(
+    "/* Dark mode boosts every alpha — shadows need more ink on a dark page,",
+    "   and even then elevation there is mostly carried by surface color. */",
+    ".dark {",
+  )
+  for (const t of tokens) lines.push(`  --${t.token}: ${t.darkCss};`)
+  if (edges) {
+    lines.push("")
+    for (const t of tokens) {
+      if (t.effectiveLevel === 0) continue
+      lines.push(`  --edge-${t.id}: ${t.edgeDark};`)
+    }
+  }
+  lines.push("}")
+
+  return lines.join("\n") + "\n"
+}
+
+// ---------- Tailwind v4 ----------
+
+/**
+ * A Tailwind v4 theme. The indirection is deliberate: `@theme` values are
+ * inlined into the generated utilities, so a plain dark override of the theme
+ * variable would change nothing. Pointing the theme at intermediate variables
+ * that .dark redefines is what lets one set of `shadow-*` utilities follow the
+ * theme at runtime.
+ */
+export function toTailwind(scale: ResolvedScale): string {
+  const tokens = exportedTokens(scale)
+  const edges = scale.config.dark === "sb"
+
+  const lines: string[] = ["/* The runtime values, flipped by theme. */", ":root {"]
+  for (const t of tokens) lines.push(`  --depths-${t.id}: ${t.lightCss};`)
+  lines.push("}", "", ".dark {")
+  for (const t of tokens) lines.push(`  --depths-${t.id}: ${t.darkCss};`)
+  lines.push("}", "")
+
+  lines.push(
+    "/* The theme points at them, so `shadow-raised` etc. follow .dark. */",
+    "@theme {",
+  )
+  for (const t of tokens) lines.push(`  --shadow-${t.id}: var(--depths-${t.id});`)
+  lines.push("}")
+
+  if (edges) {
+    lines.push(
+      "",
+      "/* Edges are plain variables — use as `border: var(--edge-raised)`.",
+      "   Transparent in light mode so the theme flip never shifts layout. */",
+      ":root {",
+    )
+    for (const t of tokens) {
+      if (t.effectiveLevel === 0) continue
+      lines.push(`  --edge-${t.id}: ${t.edgeLight};`)
+    }
+    lines.push("}", "", ".dark {")
+    for (const t of tokens) {
+      if (t.effectiveLevel === 0) continue
+      lines.push(`  --edge-${t.id}: ${t.edgeDark};`)
+    }
+    lines.push("}")
+  }
+
+  return lines.join("\n") + "\n"
+}
+
+// ---------- DTCG ----------
+
+const hex2 = (n: number) => n.toString(16).padStart(2, "0")
+
+/** A DTCG shadow layer. Color is hex8 — the alpha rides in the last byte. */
+function dtcgLayer(
+  l: { x: number; y: number; blur: number; spread: number; alpha: number; inset?: boolean },
+  tint: { r: number; g: number; b: number },
+  mode: "light" | "dark",
+) {
+  const alpha = mode === "dark" ? darkAlpha(l.alpha) : l.alpha
+  return {
+    color: `#${hex2(tint.r)}${hex2(tint.g)}${hex2(tint.b)}${hex2(Math.round(alpha * 255))}`,
+    offsetX: `${l.x}px`,
+    offsetY: `${l.y}px`,
+    blur: `${l.blur}px`,
+    spread: `${l.spread}px`,
+    ...(l.inset ? { inset: true } : {}),
+  }
+}
+
+/**
+ * W3C DTCG design tokens, using the composite `shadow` type.
+ *
+ * Deliberately NOT labelled a Figma export: Figma variables have no shadow
+ * type, so a Figma tab would be the quiet lie Motion refused to ship for
+ * easings. This file is for DTCG consumers — Style Dictionary and friends.
+ * Dark values travel in `$extensions`, because DTCG has no notion of modes.
+ */
+export function toDtcg(scale: ResolvedScale, url: string): string {
+  const tokens = exportedTokens(scale)
+  const group: Record<string, unknown> = {
+    $description: `Shadow and elevation tokens generated by Depths — ${url}`,
+  }
+  const shadows: Record<string, unknown> = {}
+  for (const t of tokens) {
+    shadows[t.id] = {
+      $type: "shadow",
+      $description: t.role,
+      $value: t.layers.map((l) => dtcgLayer(l, scale.tint, "light")),
+      $extensions: {
+        "studio.depths": {
+          level: t.effectiveLevel,
+          dark: t.layers.map((l) => dtcgLayer(l, scale.tint, "dark")),
+        },
+      },
+    }
+  }
+  group.shadow = shadows
+  return JSON.stringify(group, null, 2) + "\n"
+}
+
+// ---------- Agent markdown ----------
+
+/**
+ * The handoff for a coding agent: the values, but more importantly the intent —
+ * which token goes where, what never gets one, and what dark mode actually
+ * needs. The same markdown renders in the on-page agent block.
+ */
+export function toAgentMarkdown(
+  scale: ResolvedScale,
+  url: string,
+  warnings: string[] = [],
+): string {
+  const tokens = exportedTokens(scale)
+  const preset = PRESETS[scale.config.presetId]
+  const c = scale.config
+
+  const lines: string[] = []
+  lines.push("# Shadow & elevation tokens")
+  lines.push("")
+  lines.push(
+    `Generated by Depths (${url}). A six-level elevation scale derived from one`,
+    `light source, mapped to semantic tokens. Preset: **${preset.name}** — ${preset.blurb}`,
+  )
+  lines.push("")
+
+  if (warnings.length) {
+    lines.push("> **This link did not arrive intact.**")
+    for (const w of warnings) lines.push(`> ${w}`)
+    lines.push("")
+  }
+
+  lines.push("## The tokens")
+  lines.push("")
+  lines.push("| Token | Level | Use when | Not when |")
+  lines.push("| --- | --- | --- | --- |")
+  for (const t of tokens) {
+    lines.push(`| \`--${t.token}\` | ${t.effectiveLevel} | ${t.when} | ${t.whenNot} |`)
+  }
+  lines.push("")
+
+  lines.push("## The CSS")
+  lines.push("")
+  lines.push(
+    "Paste as-is. Apply with `box-shadow: var(--shadow-raised)`; in dark mode also",
+    "apply `border: var(--edge-raised)` where the variable exists — it is transparent",
+    "in light mode, so it can ship unconditionally without shifting layout.",
+  )
+  lines.push("")
+  lines.push("```css")
+  lines.push(toCss(scale).trimEnd())
+  lines.push("```")
+  lines.push("")
+
+  lines.push("## Rules the scale is built on")
+  lines.push("")
+  lines.push(
+    "- **One step per interaction.** Hover lifts an element exactly one token —",
+    "  raised to hover — never two.",
+    "- **Don't nest elevation.** A raised card inside a raised card flattens both;",
+    "  the inner surface goes back to `shadow-none`.",
+    "- **Dark mode is honest, not equivalent.** Alphas are boosted and edges added,",
+    "  but elevation on a dark page is mostly carried by surface color. If the",
+    "  design system has a surface ramp (see https://www.ramps.studio/), raise the",
+    "  surface one step per elevation level and let the shadow support it.",
+    "- **`shadow-pressed` is an inset**, outside the scale. It signals a surface",
+    "  pushed below the page, not a lower elevation.",
+    "- **Never animate between distant levels.** Transitioning raised to hover is",
+    "  designed for; transitioning none to modal reads as a glitch — fade the",
+    "  surface in at its final elevation instead.",
+  )
+  lines.push("")
+
+  lines.push("## Regenerate")
+  lines.push("")
+  lines.push(`This exact scale: ${url}`)
+  lines.push("")
+  lines.push(
+    "Adjust by editing the query string — parameters are plain decimals,",
+    `documented at ${originOf(url)}/llms.txt. The same data is served as JSON at`,
+    `${originOf(url)}/api/shadows (append the same query string).`,
+  )
+  lines.push("")
+
+  lines.push(`---`)
+  lines.push("")
+  lines.push(`## Other tools in this family`)
+  lines.push("")
+  lines.push(`${FAMILY_NAME} — ${FAMILY_BLURB}`)
+  lines.push("")
+  lines.push("```")
+  lines.push(familyAsText("depths"))
+  lines.push("```")
+
+  return lines.join("\n") + "\n"
+}
+
+function originOf(url: string): string {
+  try {
+    return new URL(url).origin
+  } catch {
+    return "https://www.depths.studio"
+  }
+}
+
+/** The prompt handed to an agent from the export panel's second fork. */
+export function agentPrompt(url: string): string {
+  return `Open ${url} and read the "Machine-readable scale" on the page — the same data is at ${originOf(url)}/api/shadows with the identical query string.
+
+It defines a six-level elevation scale as layered box-shadows, mapped to semantic tokens: shadow-none, shadow-raised, shadow-hover, shadow-sticky, shadow-dropdown, shadow-modal, shadow-toast, and an inset shadow-pressed. Light and dark values are both included, plus hairline --edge-* borders for dark mode.
+
+Please:
+1. Add the CSS export to the project's stylesheet and reference tokens only by name — box-shadow: var(--shadow-raised) — never a literal shadow.
+2. Wire each token to the surfaces its "use when" line describes, and respect the "not when" column strictly.
+3. In dark mode, apply border: var(--edge-*) alongside each shadow (it is transparent in light mode), and prefer raising surface color over inventing stronger shadows.`
+}
+
+export type { ResolvedToken }

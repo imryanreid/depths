@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "depths.studio" }],
+      "destination": "https://www.depths.studio/$1",
+      "permanent": true
+    }
+  ]
+}
