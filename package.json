@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "license": "MIT",
-  "description": "Turn one light source into a layered shadow and elevation scale, mapped to semantic tokens — exportable as CSS, Tailwind, or DTCG, and readable by an agent.",
+  "description": "Turn one light source into a layered shadow and elevation scale, mapped to semantic tokens—exportable as CSS, Tailwind, or DTCG, and readable by an agent.",
   "scripts": {
     "dev": "vite",
     "build": "pnpm llms && tsc --noEmit && vite build",

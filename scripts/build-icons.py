@@ -7,7 +7,7 @@
 # Why the PNGs exist: browsers take the SVG happily,
 # but Google Search's favicon documentation lists
 # neither SVG among its supported formats nor anything
-# below 48x48 as a good idea — and the SVG declares an
+# below 48x48 as a good idea—and the SVG declares an
 # intrinsic 32x32. So a search result needs a real
 # raster fallback or it gets the generic globe.
 #
@@ -29,7 +29,7 @@ import zlib
 
 # The shape, in a 32-unit coordinate space with the family's 6-unit inset.
 #
-# Three squares stepping down and to the right — surfaces at three elevations,
+# Three squares stepping down and to the right—surfaces at three elevations,
 # the diagonal offset being the z-axis this tool is about. Painted back to
 # front, deepest darkest, so the front-left square reads as the raised one.
 # Ramps is horizontal bars, Beeps vertical bars, Springs a coil; Depths is
@@ -54,7 +54,7 @@ def write_svg(path):
         for x, y, c in PLANES
     )
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <!-- Three squares stepping down-right — surfaces at three elevations, the
+  <!-- Three squares stepping down-right—surfaces at three elevations, the
        diagonal offset being the z-axis this tool is about. Deepest darkest,
        painted back to front. Shares the family plate: #131210, rx 7, a 6-unit
        inset. Keep in step with the `depths` figure in the shared ToolMark. -->
@@ -84,7 +84,7 @@ def render(size, supersample=4):
     scale = 32.0 / big
 
     # One coverage mask for the plate, one per plane. Planes overlap, so the
-    # LAST plane covering a sample wins — that is the painter's order.
+    # LAST plane covering a sample wins—that is the painter's order.
     plate = bytearray(big * big)
     plane_idx = bytearray(big * big)  # 0 = none, 1..n = PLANES index + 1
     for py in range(big):

@@ -8,7 +8,7 @@
 // purposes: one authored table, one resolver, every
 // exporter and the agent payload reading only the
 // resolved array. Exclusions filter the OUTPUT, never
-// the computation — the UI needs excluded rows to
+// the computation—the UI needs excluded rows to
 // render dimmed, and nothing downstream may see a
 // half-computed set.
 // ==============================================
@@ -21,7 +21,7 @@ import {
   type ShadowLayer,
 } from "./depths.js"
 
-/** Short names — what `pu` and `xt` carry in the URL. The token is `shadow-<name>`. */
+/** Short names—what `pu` and `xt` carry in the URL. The token is `shadow-<name>`. */
 export const TOKEN_IDS = [
   "none",
   "raised",
@@ -42,7 +42,7 @@ export type TokenDef = {
   token: string
   role: string
   category: TokenCategory
-  /** Authored level, 0–5 — or "inset" for the one token outside the scale. */
+  /** Authored level, 0–5—or "inset" for the one token outside the scale. */
   level: number | "inset"
   when: string
   whenNot: string
@@ -67,7 +67,7 @@ export const TOKENS: TokenDef[] = [
     "Flush with the surface",
     "SURFACE",
     0,
-    "Inputs, list rows, table cells — anything that belongs to the page rather than sitting on it.",
+    "Inputs, list rows, table cells—anything that belongs to the page rather than sitting on it.",
     "Don't use elevation to fix a contrast problem; that's a color decision.",
   ),
   t(
@@ -76,7 +76,7 @@ export const TOKENS: TokenDef[] = [
     "SURFACE",
     1,
     "The default for anything that reads as an object: cards, tiles, buttons.",
-    "Not for nesting — a raised card inside a raised card flattens both.",
+    "Not for nesting—a raised card inside a raised card flattens both.",
   ),
   t(
     "hover",
@@ -84,7 +84,7 @@ export const TOKENS: TokenDef[] = [
     "SURFACE",
     2,
     "On hover or focus of an element that is shadow-raised at rest, so the lift reads as one step up.",
-    "Not as a resting state — if everything is lifted, nothing is.",
+    "Not as a resting state—if everything is lifted, nothing is.",
   ),
   t(
     "sticky",
@@ -92,7 +92,7 @@ export const TOKENS: TokenDef[] = [
     "OVERLAY",
     2,
     "Bars that pin over scrolling content, the moment content actually passes beneath them.",
-    "Not while the page sits at the top — a shadow over nothing announces machinery.",
+    "Not while the page sits at the top—a shadow over nothing announces machinery.",
   ),
   t(
     "dropdown",
@@ -100,7 +100,7 @@ export const TOKENS: TokenDef[] = [
     "OVERLAY",
     3,
     "Transient surfaces summoned from a control and dismissed by a click elsewhere.",
-    "Not for dialogs that take over the page — that is shadow-modal's job.",
+    "Not for dialogs that take over the page—that is shadow-modal's job.",
   ),
   t(
     "modal",
@@ -108,7 +108,7 @@ export const TOKENS: TokenDef[] = [
     "OVERLAY",
     4,
     "Surfaces that block the page behind a scrim and hold focus until dismissed.",
-    "Not for toasts — a modal shadow on a toast makes a notification feel like an interruption.",
+    "Not for toasts—a modal shadow on a toast makes a notification feel like an interruption.",
   ),
   t(
     "toast",
@@ -123,7 +123,7 @@ export const TOKENS: TokenDef[] = [
     "Pressed wells and active insets",
     "FEEDBACK",
     "inset",
-    "Wells, active toggle tracks, pressed button states — surfaces pushed below the page.",
+    "Wells, active toggle tracks, pressed button states—surfaces pushed below the page.",
     "Not for disabled states; depressed and disabled are different messages.",
   ),
 ]

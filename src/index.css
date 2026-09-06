@@ -3,7 +3,7 @@
    The shared family foundation, plus anything that
    is only about this tool.
 
-   Everything visual comes from shared/tokens.css —
+   Everything visual comes from shared/tokens.css—
    the fonts, the five colour tokens, dark mode, and
    the reduced-motion block. Rules below the import
    are for surfaces no other tool has.
@@ -54,4 +54,24 @@
   outline: 2px solid var(--color-ink);
   outline-offset: 4px;
   border-radius: 999px;
+}
+
+/* The tint swatch: a native color input whose default chrome (padding and an
+   inner border) would break the 36px square. Same vendor-pseudo-element
+   territory as the slider above. */
+.depths-swatch {
+  appearance: none;
+  padding: 0;
+  background: transparent;
+}
+.depths-swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.depths-swatch::-webkit-color-swatch {
+  border: none;
+  border-radius: 5px;
+}
+.depths-swatch::-moz-color-swatch {
+  border: none;
+  border-radius: 5px;
 }

@@ -3,8 +3,8 @@
 // The query-string contract: encode the state that
 // reproduces a scale, and decode it defensively.
 //
-// Once this ships these names are a public API — a
-// shared link has to keep working — so changing one
+// Once this ships these names are a public API—a
+// shared link has to keep working—so changing one
 // means changing README.md, public/llms.txt and the
 // JSON-LD in index.html at the same time.
 //
@@ -12,7 +12,7 @@
 // chosen preset supplies is not written, so a default
 // link is bare and a tweaked one names its tweaks.
 //
-// No base64 — the family rule. An agent can compute
+// No base64—the family rule. An agent can compute
 // base64 fine, but it cannot diff it, explain it, or
 // hand-write one from the parameter table in llms.txt.
 //
@@ -27,7 +27,7 @@ import { MOVABLE_TOKEN_IDS, TOKENS, isTokenId } from "./tokens.js"
 
 /**
  * Param → config field, for the five preset-owned numbers. Values travel as
- * plain decimals — `g=1.9`, not `g=190` — because "." is safe in a query
+ * plain decimals—`g=1.9`, not `g=190`—because "." is safe in a query
  * string and an agent hand-writing a link should not need a scaling table.
  */
 const CURVE_FIELDS = [
@@ -88,7 +88,7 @@ export function decodeConfig(search: string): Partial<DepthsConfig> {
 
   const angle = Number(p.get("a"))
   if (p.has("a") && Number.isFinite(angle)) {
-    // Angles wrap rather than clamp — 450 means 90, and -30 means 330.
+    // Angles wrap rather than clamp—450 means 90, and -30 means 330.
     out.angle = ((Math.round(angle) % 360) + 360) % 360
   }
 
@@ -161,7 +161,7 @@ const KNOWN_KEYS = new Set(["p", "a", "d", "g", "b", "o", "f", "y", "c", "k", "p
 /**
  * What this link lost on the way here.
  *
- * The decoder drops what it can't parse, which keeps every link renderable —
+ * The decoder drops what it can't parse, which keeps every link renderable—
  * and used to be silent, which meant an agent could review a coherent scale
  * that is not the one that was shared. Rejected input is quoted back only
  * through an allowlist and a length cap; it is the least trustworthy thing in

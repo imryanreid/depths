@@ -125,8 +125,9 @@ describe("cssValue", () => {
 })
 
 describe("edgeValue", () => {
-  it("is transparent in light so the theme flip never shifts layout", () => {
-    expect(edgeValue(3, "light")).toBe("1px solid transparent")
+  it("is ink on light and white on dark, same strength curve", () => {
+    expect(edgeValue(3, "light")).toBe("1px solid rgb(0 0 0 / 10.5%)")
+    expect(edgeValue(3, "dark")).toBe("1px solid rgb(255 255 255 / 10.5%)")
   })
   it("strengthens with level in dark", () => {
     expect(edgeValue(1, "dark")).toContain("7.5%")

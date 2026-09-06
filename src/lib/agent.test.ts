@@ -46,7 +46,7 @@ describe("buildAgentPayload", () => {
 
   it("renders the text shape a no-JavaScript reader depends on", () => {
     const { text } = buildAgentPayload("?p=crisp", ORIGIN)
-    expect(text).toContain("DEPTHS — www.depths.studio")
+    expect(text).toContain("DEPTHS—www.depths.studio")
     expect(text).toContain("LEVELS")
     expect(text).toContain("TOKENS")
     expect(text).toContain("REGENERATE WITH DIFFERENT INPUTS")

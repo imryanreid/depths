@@ -1,8 +1,8 @@
-# PROJECT_MAP — Depths
+# PROJECT_MAP—Depths
 
 > **What this file is for:** What every file in this repo does, in plain
 > language. Update it whenever files are created, renamed or moved. Not a
-> spec — see [`SPEC.md`](SPEC.md) — and not a handoff log, which is
+> spec—see [`SPEC.md`](SPEC.md)—and not a handoff log, which is
 > [`NEXT-UP.md`](NEXT-UP.md).
 
 ## Root
@@ -40,42 +40,42 @@
 
 ### src/lib/ (pure, Node-safe, `.js` imports)
 
-| File         | What it does                                                                                                                                   |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `depths.ts`  | The model: config type, limits, `resolve()` (levels + pressed), `cssValue()` — THE layers-to-CSS serialization — `edgeValue()`, dark boosting. |
-| `presets.ts` | The four presets as declarative parameter bundles.                                                                                             |
-| `tokens.ts`  | The semantic token table with when/when-not, `resolveTokens()`, `exportedTokens()`.                                                            |
-| `params.ts`  | The URL contract: encode (diffs only), decode (defensive), `decodeWarnings`.                                                                   |
-| `export.ts`  | The exporters: `toCss`, `toTailwind`, `toDtcg`, `toNative`, `toAgentMarkdown`, `agentPrompt`.                                                  |
-| `agent.ts`   | The machine payload (JSON + plain text) both API functions serve; `publicOrigin`.                                                              |
-| `site.ts`    | `SITE_URL` — the canonical origin share links are built from.                                                                                  |
-| `*.test.ts`  | Vitest suites: model math, URL round-trips, exporter output, payload shape, the no-JS render path.                                             |
+| File         | What it does                                                                                                                               |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `depths.ts`  | The model: config type, limits, `resolve()` (levels + pressed), `cssValue()`—THE layers-to-CSS serialization—`edgeValue()`, dark boosting. |
+| `presets.ts` | The four presets as declarative parameter bundles.                                                                                         |
+| `tokens.ts`  | The semantic token table with when/when-not, `resolveTokens()`, `exportedTokens()`.                                                        |
+| `params.ts`  | The URL contract: encode (diffs only), decode (defensive), `decodeWarnings`.                                                               |
+| `export.ts`  | The exporters: `toCss`, `toTailwind`, `toDtcg`, `toNative`, `toAgentMarkdown`, `agentPrompt`.                                              |
+| `agent.ts`   | The machine payload (JSON + plain text) both API functions serve; `publicOrigin`.                                                          |
+| `site.ts`    | `SITE_URL`—the canonical origin share links are built from.                                                                                |
+| `*.test.ts`  | Vitest suites: model math, URL round-trips, exporter output, payload shape, the no-JS render path.                                         |
 
 ### src/components/
 
-| File              | What it does                                                                                                                      |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `LightSource.tsx` | The signature control: a dial with a draggable light puck; the card in the middle wears the hover shadow.                         |
-| `Slider.tsx`      | Labelled range input with a mono readout, for the five curve numbers.                                                             |
-| `Picker.tsx`      | The family-styled dropdown (ported from Beeps), used for preset and per-token level.                                              |
-| `LevelRamp.tsx`   | The six levels as floating cards; click copies the value.                                                                         |
-| `TokenTable.tsx`  | The semantic mapping: level pickers, export checkboxes, copy per row.                                                             |
-| `Scenarios.tsx`   | Token previews on the surfaces they're named for — card, dropdown, sticky, modal, toast, pressed. Runs on the exported variables. |
-| `AgentData.tsx`   | The always-mounted, height-animated machine-readable block.                                                                       |
-| `ExportPanel.tsx` | This tool's formats handed to the shared panel: CSS, Tailwind, DTCG JSON, Native (SwiftUI), Markdown.                             |
+| File              | What it does                                                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `LightSource.tsx` | The signature control: a dial with a draggable light puck; the card in the middle wears the hover shadow.                       |
+| `Slider.tsx`      | Labelled range input with a mono readout, for the five curve numbers.                                                           |
+| `Picker.tsx`      | The family-styled dropdown (ported from Beeps), used for preset and per-token level.                                            |
+| `LevelRamp.tsx`   | Levels 1–5 as floating cards; click copies the value. Hosts the edges toggle (the `k` param) in its header.                     |
+| `TokenTable.tsx`  | The semantic mapping: level pickers, export checkboxes, copy per row.                                                           |
+| `Scenarios.tsx`   | Token previews on the surfaces they're named for—card, dropdown, sticky, modal, toast, pressed. Runs on the exported variables. |
+| `AgentData.tsx`   | The always-mounted, height-animated machine-readable block.                                                                     |
+| `ExportPanel.tsx` | This tool's formats handed to the shared panel: CSS, Tailwind, DTCG JSON, Native (SwiftUI), Markdown.                           |
 
 ### src/shared/
 
-Authored in Ramps Studio, synced byte-for-byte — see its own README. Never
+Authored in Ramps Studio, synced byte-for-byte—see its own README. Never
 edited here.
 
 ## scripts/
 
-| File             | What it does                                                                                                                      |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `sync-shared.sh` | Pulls `src/shared/` from Ramps Studio; `--check` diffs and exits non-zero on drift.                                               |
-| `build-icons.py` | Renders `public/favicon.svg` + the PNG fallbacks from one description of the stacked-planes shape. Pure stdlib.                   |
-| `build-og.py`    | Renders `public/og.png` — the share card, five cards climbing the real scale. Run by hand with the system python (it has Pillow). |
+| File             | What it does                                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `sync-shared.sh` | Pulls `src/shared/` from Ramps Studio; `--check` diffs and exits non-zero on drift.                                             |
+| `build-icons.py` | Renders `public/favicon.svg` + the PNG fallbacks from one description of the stacked-planes shape. Pure stdlib.                 |
+| `build-og.py`    | Renders `public/og.png`—the share card, five cards climbing the real scale. Run by hand with the system python (it has Pillow). |
 
 ## public/
 
@@ -89,7 +89,7 @@ edited here.
 
 ## api/
 
-| File         | What it does                                                                                                                                                |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `render.ts`  | Serves `index.html` with the scale injected (JSON + visible text) for readers without JavaScript. Ported from Ramps — read its comments before simplifying. |
-| `shadows.ts` | The same payload as JSON or plain text (`?format=text`), cacheable forever.                                                                                 |
+| File         | What it does                                                                                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `render.ts`  | Serves `index.html` with the scale injected (JSON + visible text) for readers without JavaScript. Ported from Ramps—read its comments before simplifying. |
+| `shadows.ts` | The same payload as JSON or plain text (`?format=text`), cacheable forever.                                                                               |

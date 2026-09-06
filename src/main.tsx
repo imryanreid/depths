@@ -13,9 +13,9 @@ import App from "./App"
 import "./index.css"
 
 // api/render injects a plain-text + JSON copy of the scale into the HTML so
-// agents that don't run JavaScript can read it. It ships VISIBLE on purpose —
+// agents that don't run JavaScript can read it. It ships VISIBLE on purpose—
 // readability-style extractors honour inline hiding and would skip a
-// display:none block, which is the whole point of it existing — so the moment
+// display:none block, which is the whole point of it existing—so the moment
 // JavaScript proves it is running, take it away. It sits outside #root, so
 // React never owned it and removing it is safe.
 document.getElementById("agent-shadows")?.remove()

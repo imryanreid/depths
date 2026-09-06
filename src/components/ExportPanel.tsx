@@ -8,7 +8,7 @@
 // No Figma tab, deliberately: Figma variables have no
 // shadow type, so a Figma tab would be the quiet lie
 // Motion refused to ship for easings. The JSON tab is
-// DTCG — the format Figma-adjacent pipelines (Style
+// DTCG—the format Figma-adjacent pipelines (Style
 // Dictionary and friends) actually consume.
 // ==============================================
 import ExportPanel, { type ExportFormat } from "../shared/components/ExportPanel"
@@ -41,7 +41,7 @@ export default function DepthsExport({
       fidelity: {
         summary: "Light and dark in one file",
         detail:
-          "Custom properties in :root, boosted alphas under .dark, and — when the dark strategy includes edges — transparent-in-light hairline borders, so applying border: var(--edge-raised) unconditionally never shifts layout.",
+          "Custom properties in :root, boosted alphas under .dark, and—when the dark strategy includes edges—transparent-in-light hairline borders, so applying border: var(--edge-raised) unconditionally never shifts layout.",
       },
     },
     {
@@ -53,7 +53,7 @@ export default function DepthsExport({
       fidelity: {
         summary: "Theme values are indirected on purpose",
         detail:
-          "Tailwind v4 inlines @theme values into the generated utilities, so a plain .dark override of the theme variable would change nothing — verified against the compiler, not assumed. The theme points at intermediate variables that .dark redefines, which is what lets shadow-raised follow the theme at runtime. The cost: Tailwind's shadow-color utilities can't recolor an indirected value, so tint the shadow here instead.",
+          "Tailwind v4 inlines @theme values into the generated utilities, so a plain .dark override of the theme variable would change nothing—verified against the compiler, not assumed. The theme points at intermediate variables that .dark redefines, which is what lets shadow-raised follow the theme at runtime. The cost: Tailwind's shadow-color utilities can't recolor an indirected value, so tint the shadow here instead.",
       },
     },
     {
@@ -63,9 +63,9 @@ export default function DepthsExport({
       mime: "application/json",
       render: () => toDtcg(scale, url),
       fidelity: {
-        summary: "DTCG — dark values ride in $extensions",
+        summary: "DTCG—dark values ride in $extensions",
         detail:
-          'W3C DTCG\'s composite shadow type, for Style Dictionary and similar pipelines. DTCG has no notion of modes, so dark values travel under $extensions["studio.depths"], and the inset flag on shadow-pressed is a recent addition some consumers ignore. There is no Figma tab because Figma variables have no shadow type — importing this file there has nothing to attach to.',
+          'W3C DTCG\'s composite shadow type, for Style Dictionary and similar pipelines. DTCG has no notion of modes, so dark values travel under $extensions["studio.depths"], and the inset flag on shadow-pressed is a recent addition some consumers ignore. There is no Figma tab because Figma variables have no shadow type—importing this file there has nothing to attach to.',
       },
     },
     {
@@ -75,9 +75,9 @@ export default function DepthsExport({
       mime: "text/plain",
       render: () => toNative(scale, url),
       fidelity: {
-        summary: "Radius is blur ÷ 2 — the conversion is stated, not hidden",
+        summary: "Radius is blur ÷ 2—the conversion is stated, not hidden",
         detail:
-          "SwiftUI's shadow radius is roughly the Gaussian sigma, so CSS blur converts at half; points equal px at 1x. Chained .shadow() calls compose, so the layers survive intact, and this scale never emits spread — the one thing SwiftUI couldn't represent. The pressed inset uses ShapeStyle.shadow(.inner), which floors that one piece at iOS 16 / macOS 13.",
+          "SwiftUI's shadow radius is roughly the Gaussian sigma, so CSS blur converts at half; points equal px at 1x. Chained .shadow() calls compose, so the layers survive intact, and this scale never emits spread—the one thing SwiftUI couldn't represent. The pressed inset uses ShapeStyle.shadow(.inner), which floors that one piece at iOS 16 / macOS 13.",
       },
     },
     {
@@ -98,7 +98,7 @@ export default function DepthsExport({
     <ExportPanel
       formats={formats}
       agentPrompt={agentPrompt(url)}
-      codeBlurb="CSS variables, a Tailwind v4 theme, or DTCG design tokens — light and dark both. Copy or download."
+      codeBlurb="CSS variables, a Tailwind v4 theme, or DTCG design tokens—light and dark both. Copy or download."
     />
   )
 }

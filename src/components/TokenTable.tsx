@@ -4,7 +4,7 @@
 // level, with the level movable per token and each
 // row excludable from export.
 //
-// Exclusions dim a row rather than removing it — the
+// Exclusions dim a row rather than removing it—the
 // scale is always fully resolved, and the checkbox
 // filters the OUTPUT. Same rule as Ramps.
 // ==============================================
@@ -34,7 +34,7 @@ export default function TokenTable({
       </Label>
       <p className="text-ash mb-4 max-w-[62ch] text-sm leading-relaxed">
         The levels above, named for what they do. Move a token to another level if your product
-        disagrees, and untick anything you don&rsquo;t want exported — the math never changes,
+        disagrees, and untick anything you don&rsquo;t want exported—the math never changes,
         only what ships.
       </p>
       <div className="overflow-x-auto">

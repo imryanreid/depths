@@ -10,7 +10,7 @@
 /**
  * Canonical origin, no trailing slash.
  *
- * `www`, matching the rest of the family — the family picked one and the only
+ * `www`, matching the rest of the family—the family picked one and the only
  * thing that matters is that every tool picks the same one, since a site
  * reachable at both spellings splits its own crawl.
  *

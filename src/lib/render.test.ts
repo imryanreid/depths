@@ -2,7 +2,7 @@
 // NO-JS RENDER TESTS
 // The api/render handler exercised as a real Request
 // against a stubbed shell, asserting on the returned
-// bytes — the one path a browser check cannot prove.
+// bytes—the one path a browser check cannot prove.
 // ==============================================
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { GET } from "../../api/render.js"
@@ -39,15 +39,15 @@ const req = (path: string) =>
   })
 
 describe("GET /api/render", () => {
-  it("injects both shapes — JSON script and visible pre — outside #root", async () => {
+  it("injects both shapes—JSON script and visible pre—outside #root", async () => {
     stubShell(SHELL)
     const html = await (await GET(req("/?p=crisp"))).text()
     expect(html).toContain('<div id="agent-shadows">')
     expect(html).toContain('<script type="application/json" id="depths-scale">')
-    expect(html).toContain("DEPTHS — www.depths.studio")
+    expect(html).toContain("DEPTHS—www.depths.studio")
     // The block lands after the app root, before </body>.
     expect(html.indexOf("agent-shadows")).toBeGreaterThan(html.indexOf('<div id="root">'))
-    // No hiding styles — the one style allowed is wrapping.
+    // No hiding styles—the one style allowed is wrapping.
     expect(html).not.toContain("display:none")
   })
 
@@ -68,7 +68,7 @@ describe("GET /api/render", () => {
     const html = await (
       await GET(req("/?p=%3C%2Fscript%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E"))
     ).text()
-    // The payload quotes the rejected preset back — it must arrive escaped.
+    // The payload quotes the rejected preset back—it must arrive escaped.
     expect(html).not.toContain("</script><script>alert(1)")
   })
 

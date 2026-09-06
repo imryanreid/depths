@@ -11,9 +11,9 @@
 // and skip such content, which would make this
 // invisible to exactly the readers it exists for.
 // A button plus a height-animated box that is ALWAYS
-// mounted preserves the property a <details> had —
+// mounted preserves the property a <details> had—
 // the nodes stay in the document, they are merely
-// not painted — while being able to animate.
+// not painted—while being able to animate.
 // ==============================================
 import { useState } from "react"
 import { motion } from "motion/react"
@@ -57,7 +57,7 @@ export default function AgentData({
       </button>
 
       {/*
-        Always mounted, height-animated — never unmounted. main.tsx removes the
+        Always mounted, height-animated—never unmounted. main.tsx removes the
         block api/render injects the moment React takes over, so once the app
         is running THIS is the only copy of the machine-readable text in the
         document. An {open && ...} here would delete it outright for anything
@@ -74,7 +74,7 @@ export default function AgentData({
         <div className="px-4 pb-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <p className="text-ash max-w-[70ch] text-sm leading-relaxed">
-              The same markdown the Export panel emits — every token with its values, which
+              The same markdown the Export panel emits—every token with its values, which
               surface gets which, and what dark mode actually needs. Fetching this page&rsquo;s
               URL returns the same data with no JavaScript required.
             </p>

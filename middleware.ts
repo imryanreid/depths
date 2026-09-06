@@ -11,7 +11,7 @@
 //
 // Every "/" request is diverted, including the bare
 // homepage. That URL is how an agent told to "use
-// depths.studio" arrives — there is no link to follow
+// depths.studio" arrives—there is no link to follow
 // yet, so it has to find the default scale and the
 // query-string contract in the page itself. Served
 // as a static asset it would find neither, and would

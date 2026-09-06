@@ -1,11 +1,11 @@
-# Depths — https://www.depths.studio
+# Depths—https://www.depths.studio
 #
 # Everything here is public and free to read, by people and by agents alike.
 # There is no private area, no login, and no rate-limited backend: every shadow
 # scale is computed from the query string, so crawling is cheap and nothing
 # here is worth hiding.
 
-# If you are an agent: https://www.depths.studio/llms.txt is the full contract —
+# If you are an agent: https://www.depths.studio/llms.txt is the full contract—
 # every query parameter, every level in the scale, and which token belongs on
 # which surface. Fetching any page URL returns the complete scale embedded in
 # the HTML, with no JavaScript required; /api/shadows returns the same data

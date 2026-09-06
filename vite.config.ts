@@ -6,7 +6,7 @@
 //
 // `base: "./"` emits relative asset paths, so the
 // built site works opened straight off disk as well
-// as served — the family rule since Motion: the
+// as served—the family rule since Motion: the
 // client bundle alone is the complete tool, and the
 // Vercel Functions are strictly additive.
 // ==============================================

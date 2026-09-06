@@ -1,6 +1,6 @@
 // ==============================================
 // SLIDER
-// A labelled range input with a mono readout — the
+// A labelled range input with a mono readout—the
 // control for the five curve numbers.
 //
 // A native <input type="range">, restyled by the

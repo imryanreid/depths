@@ -22,9 +22,9 @@ describe("toCss", () => {
     expect(css).toContain("rgb(0 0 0 / 10.5%)")
   })
 
-  it("ships edges when the dark strategy asks for them, transparent in light", () => {
+  it("ships edges in both modes when they're on—ink on light, white on dark", () => {
     const withEdges = toCss(resolve({ ...DEFAULT_CONFIG, dark: "sb" }))
-    expect(withEdges).toContain("--edge-raised: 1px solid transparent;")
+    expect(withEdges).toContain("--edge-raised: 1px solid rgb(0 0 0 /")
     expect(withEdges).toContain("--edge-raised: 1px solid rgb(255 255 255 /")
     const without = toCss(resolve({ ...DEFAULT_CONFIG, dark: "s" }))
     expect(without).not.toContain("--edge-")

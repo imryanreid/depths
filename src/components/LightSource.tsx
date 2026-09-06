@@ -56,7 +56,7 @@ export default function LightSource({
   )
 
   // Window-level listeners while dragging, so the puck follows the pointer
-  // even once it leaves the dial — the standard slider feel.
+  // even once it leaves the dial—the standard slider feel.
   useEffect(() => {
     if (!dragging) return
     const move = (e: PointerEvent) => fromEvent(e)

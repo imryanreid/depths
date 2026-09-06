@@ -2,7 +2,7 @@
 // GET /
 //
 // The site is a client-rendered SPA, so a plain fetch
-// of a share link returns an empty <div id="root"> —
+// of a share link returns an empty <div id="root">—
 // nothing an agent could read unless it executes
 // JavaScript, which most link-following agents don't.
 //
@@ -13,7 +13,7 @@
 // never touches it, and main.tsx removes it on mount.
 //
 // The bare homepage comes through here too, carrying
-// the default scale — it's the URL an agent lands on
+// the default scale—it's the URL an agent lands on
 // when it was told the tool's name but given no link.
 // Only *parameterized* URLs get their <head>
 // rewritten; the homepage keeps the metadata that
@@ -29,7 +29,7 @@ import { buildAgentPayload, publicOrigin } from "../src/lib/agent.js"
  * JSON that is safe to sit inside a `<script>` element.
  *
  * `JSON.stringify` does not escape `<`, so any string reaching the payload
- * could carry `</script>` and end the element early — everything after it is
+ * could carry `</script>` and end the element early—everything after it is
  * then parsed as live HTML. That is not hypothetical: a crafted parameter did
  * exactly this on Ramps in production, and `s-maxage` pinned the result at the
  * edge.
@@ -67,12 +67,12 @@ export async function GET(request: Request): Promise<Response> {
   // Never a cached copy. "/index.html" is a stable URL whose contents change
   // every deployment, so a CDN hit can hand this function the PREVIOUS build's
   // shell: stale meta tags, and asset hashes that now 404. Motion hit exactly
-  // that in production — a current payload grafted onto a document whose
+  // that in production—a current payload grafted onto a document whose
   // JavaScript no longer existed, which looks fine to an agent and is
   // completely broken for a person.
   //
   // A per-deployment `__build` query key is NOT the answer: Vercel does not
-  // key static-asset cache entries on the query string — measured on Ramps,
+  // key static-asset cache entries on the query string—measured on Ramps,
   // three different values and one absent all returned the same single entry.
   //
   // So: two asks that actually reach different layers. `cache: "no-store"` is
@@ -82,7 +82,7 @@ export async function GET(request: Request): Promise<Response> {
   const shellUrl = new URL("/index.html", url.origin)
 
   // Bounded, with one retry. Without a timeout a hung fetch holds a compute
-  // concurrency slot until the platform default — unbilled I/O wait, but slots
+  // concurrency slot until the platform default—unbilled I/O wait, but slots
   // are the contended resource under load.
   const fetchShell = () =>
     fetch(shellUrl, {
@@ -107,8 +107,8 @@ export async function GET(request: Request): Promise<Response> {
 
   // Make sure what came back is actually our shell before injecting into it.
   //
-  // `shell.ok` is not enough. With Deployment Protection on — the default for
-  // preview deployments — this internal fetch is intercepted and served
+  // `shell.ok` is not enough. With Deployment Protection on—the default for
+  // preview deployments—this internal fetch is intercepted and served
   // Vercel's SSO login page with a 200, so the guard above passes and the
   // payload gets grafted onto somebody else's document. Ramps observed a
   // 508 KB login page with a working palette bolted to the bottom of it.
@@ -129,7 +129,7 @@ export async function GET(request: Request): Promise<Response> {
   try {
     payload = buildAgentPayload(url.search, origin)
   } catch {
-    // A scale we can't resolve shouldn't take the page down — fall back to the
+    // A scale we can't resolve shouldn't take the page down—fall back to the
     // untouched shell and let the client render it.
     return new Response(html, {
       status: 200,
@@ -140,7 +140,7 @@ export async function GET(request: Request): Promise<Response> {
   const { json, text, specific } = payload
 
   // Only a URL that asked for a particular scale gets its <head> rewritten.
-  // The bare homepage must keep `index, follow` and its own canonical —
+  // The bare homepage must keep `index, follow` and its own canonical—
   // routing it through here to pick up the readable block must not quietly
   // deindex the site's only indexable page.
   if (specific) {
@@ -148,12 +148,12 @@ export async function GET(request: Request): Promise<Response> {
     // Each parameterized scale is self-canonical so it shares and unfurls
     // correctly, but the query space is unbounded and letting a crawler wander
     // it would bloat the index of a site with exactly one real page. `follow`
-    // keeps outbound links live, and this says nothing to agents — they fetch
+    // keeps outbound links live, and this says nothing to agents—they fetch
     // and read regardless of indexing directives.
     //
     // Replacer FUNCTIONS throughout, never replacement strings: String.replace
     // expands `$&`, `` $` ``, `$'` and `$1` inside a replacement string, after
-    // escaping has run — so a `$` in a value could splice a chunk of the
+    // escaping has run—so a `$` in a value could splice a chunk of the
     // surrounding document into an attribute and break out of it.
     html = html
       .replace(
@@ -170,8 +170,8 @@ export async function GET(request: Request): Promise<Response> {
       )
   }
 
-  // Both shapes on purpose: HTML-to-markdown conversion — what most agents do
-  // before reading a page — strips <script>, so JSON alone would be invisible
+  // Both shapes on purpose: HTML-to-markdown conversion—what most agents do
+  // before reading a page—strips <script>, so JSON alone would be invisible
   // to the very tools this exists for. The <pre> survives that conversion.
   //
   // Deliberately carries no hiding styles. `display:none` would be the obvious
@@ -183,7 +183,7 @@ export async function GET(request: Request): Promise<Response> {
   //
   // The one style it carries is not a hiding style: a bare <pre> is
   // `white-space: pre`, so a long payload line lays out far wider than a phone
-  // viewport until the block is removed. Wrapping costs nothing — the text
+  // viewport until the block is removed. Wrapping costs nothing—the text
   // stays fully present and fully extractable.
   const injected = `
 <div id="agent-shadows">
@@ -202,7 +202,7 @@ ${escapeHtml(text)}
     headers: {
       ...SAFE_HEADERS,
       "content-type": "text/html; charset=utf-8",
-      // Deterministic for a given query string, but NOT across deployments —
+      // Deterministic for a given query string, but NOT across deployments—
       // this HTML embeds the built shell, so it names hashed asset filenames
       // that only exist for as long as that build does. A cache key that
       // captures only the query string must not outlive the deployment by

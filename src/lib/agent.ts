@@ -4,7 +4,7 @@
 // machines, in both shapes: JSON and plain text.
 //
 // Both /api/shadows and /api/render read this. That
-// is the point — the family rule is that there is
+// is the point—the family rule is that there is
 // never a second serialization, and an endpoint that
 // drifts from the page is exactly the way this tool
 // would end up lying to somebody.
@@ -29,12 +29,12 @@ export function publicOrigin(request: Request): string {
 }
 
 /**
- * Stated rather than implied — prose for output that is correct but reads
+ * Stated rather than implied—prose for output that is correct but reads
  * like a bug. The family signature.
  */
 const NOTES = {
   darkMode:
-    "Dark values boost every alpha x1.5 (capped at 0.85) and add hairline --edge-* borders. Even boosted, elevation on a dark surface is mostly carried by surface color — pair these tokens with a lightened surface ramp (https://www.ramps.studio/) rather than inventing stronger shadows.",
+    "Dark values boost every alpha x1.5 (capped at 0.85), and the optional --edge-* hairlines flip from ink to white. Even boosted, elevation on a dark surface is mostly carried by surface color—pair these tokens with a lightened surface ramp (https://www.ramps.studio/) rather than inventing stronger shadows.",
   alphaUnits:
     "Layer alpha is 0-1 in this payload and a percentage inside the CSS strings; they are the same number.",
   pressed:
@@ -77,7 +77,7 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
   const json = {
     version: 1,
     $schema: `${origin}/llms.txt`,
-    generator: "Depths — www.depths.studio",
+    generator: "Depths—www.depths.studio",
     source: `${origin}/${search}`,
     ...(warnings.length ? { warnings } : {}),
     preset: config.presetId,
@@ -109,7 +109,12 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
       category: t.category,
       css: t.lightCss,
       cssDark: t.darkCss,
-      ...(config.dark === "sb" && t.effectiveLevel !== 0 ? { edgeDark: t.edgeDark } : {}),
+      // Both edge values when edges are on. `edgeLight` arrived with the
+      // two-mode edges (2026-09-06); keys are only ever added, so version
+      // stays 1 and a consumer reading only edgeDark keeps working.
+      ...(config.dark === "sb" && t.effectiveLevel !== 0
+        ? { edgeLight: t.edgeLight, edgeDark: t.edgeDark }
+        : {}),
       when: t.when,
       whenNot: t.whenNot,
     })),
@@ -125,9 +130,9 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
   }
 
   const lines: string[] = []
-  lines.push("DEPTHS — www.depths.studio", "")
+  lines.push("DEPTHS—www.depths.studio", "")
   lines.push(`preset  ${config.presetId} (${preset.name})`)
-  lines.push(`light   ${config.angle} deg — shadows fall toward (${dir.x}, ${dir.y})`)
+  lines.push(`light   ${config.angle} deg—shadows fall toward (${dir.x}, ${dir.y})`)
   lines.push(
     `curves  distance ${config.distance}px, growth x${config.growth}, blur x${config.blur}, opacity ${config.opacity}%, falloff x${config.falloff}, ${config.layers} layers`,
     "",
@@ -149,7 +154,7 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
     lines.push(`    value     ${t.lightCss}`)
     lines.push(`    dark      ${t.darkCss}`)
     if (config.dark === "sb" && t.effectiveLevel !== 0) {
-      lines.push(`    dark edge ${t.edgeDark}`)
+      lines.push(`    edge      ${t.edgeLight} (light) / ${t.edgeDark} (dark)`)
     }
     lines.push(`    use when  ${t.when}`)
     lines.push(`    not when  ${t.whenNot}`)

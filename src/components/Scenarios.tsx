@@ -3,7 +3,7 @@
 // The tokens previewed on the surfaces they're named
 // for: a card that lifts, an open dropdown, a sticky
 // bar, a modal, a toast, a pressed well. One
-// vocabulary — the thing you are watching is named
+// vocabulary—the thing you are watching is named
 // the same thing you'd reach for at a call site.
 //
 // Every mock reads the CSS variables App injects
@@ -73,7 +73,7 @@ export default function Scenarios() {
         Preview
       </Label>
       <p className="text-ash mb-4 max-w-[62ch] text-sm leading-relaxed">
-        Each surface runs on the exported variables — hover the card, and check dark mode:
+        Each surface runs on the exported variables—hover the card, and check dark mode:
         that&rsquo;s where the edges earn their keep.
       </p>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

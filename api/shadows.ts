@@ -7,12 +7,12 @@
 // Same query contract as the site itself, so an
 // agent handed a share link can swap "/" for
 // "/api/shadows" and get the machine-readable form.
-// Pure function of the query string — no state, no
-// storage — so responses cache indefinitely.
+// Pure function of the query string—no state, no
+// storage—so responses cache indefinitely.
 //
 // The payload itself lives in src/lib/agent.ts and
 // is shared with /api/render. One serialization, per
-// the family rule — an endpoint that drifts from the
+// the family rule—an endpoint that drifts from the
 // page is how this tool would end up lying to
 // somebody.
 // ==============================================
@@ -23,7 +23,7 @@ export function GET(request: Request): Response {
   const origin = publicOrigin(request)
 
   // `format` belongs to this endpoint, not to the scale contract, so it has to
-  // come off before decoding — left in, decodeWarnings reads it as a parameter
+  // come off before decoding—left in, decodeWarnings reads it as a parameter
   // that is not part of the contract and the response opens by announcing that
   // the link did not arrive intact.
   const params = new URLSearchParams(url.search)
@@ -32,7 +32,7 @@ export function GET(request: Request): Response {
   const search = params.toString() ? `?${params}` : ""
 
   // The site's own guarantee is that a link always resolves to a renderable
-  // scale — every field is clamped rather than rejected. This holds that line
+  // scale—every field is clamped rather than rejected. This holds that line
   // for the one case the clamps cannot: input hostile enough to throw. Falling
   // back to the default scale is more useful to an agent than a 500, and it
   // cannot leak anything, because there is no state here to leak.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the static OG card. Run by hand with the SYSTEM python — it is the one
+Builds the static OG card. Run by hand with the SYSTEM python—it is the one
 with Pillow (Motion's card was built the same way):
 
     /usr/bin/python3 scripts/build-og.py
@@ -12,7 +12,7 @@ Mirrors the family card: mono eyebrow, big Geist title, ash subtitle on the
 left; the tool's actual subject bleeding off the right edge. There it's
 colour swatches (Ramps) and easing curves (Motion); here it's paper cards at
 the five elevation levels, their shadows computed by the same recipe as
-src/lib/depths.ts — key + ambient layers, Soft preset, overhead light. The
+src/lib/depths.ts—key + ambient layers, Soft preset, overhead light. The
 values are scaled up (SCALE below) because a 1px/2.6px level-one shadow is
 invisible at card size; the ratios between levels are the real ones, which is
 what makes the staircase read as one material at five heights.
@@ -35,7 +35,7 @@ def f(name, size):
 
 # ---- The model, ported: Dramatic preset, overhead light ----
 # Kept in step with src/lib/presets.ts and the layer recipe in depths.ts.
-# Dramatic rather than Soft, on its own stated terms — "marketing surfaces and
+# Dramatic rather than Soft, on its own stated terms—"marketing surfaces and
 # hero moments" is presets.ts's description of it, and an OG card is exactly
 # that. Its three layers (contact + key + ambient) also read at card size,
 # where Soft's 7% is a rumour.
@@ -44,7 +44,7 @@ SCALE = 1.6  # print legibility; ratios stay honest
 
 
 def level_layers(level):
-    """(dy, blur, alpha) per layer — contact, key, ambient — in card pixels."""
+    """(dy, blur, alpha) per layer—contact, key, ambient—in card pixels."""
     u = DISTANCE * GROWTH ** (level - 1)
     a = (OPACITY / 100) * FALLOFF ** (level - 1)
     return [
@@ -69,7 +69,7 @@ d.text((72 * S, 440 * S), "source, with a handoff your agent can read.", font=su
 # ---- Right: the staircase, bleeding off the edge like the family's cards ----
 #
 # Column start is measured off the widest line rather than hardcoded, same as
-# Motion — the title is the widest thing on the left and its extent depends on
+# Motion—the title is the widest thing on the left and its extent depends on
 # the font.
 widest = max(
     72 + d.textlength("Elevation & Shadow", font=title) / S,
@@ -80,7 +80,7 @@ COL = math.ceil(widest + GUTTER)
 
 CARD, RADIUS = 200, 16
 STEP_X, STEP_Y = 58, 82
-# Level 1 sits low-left, level 5 high-right with a modest bleed — ascending,
+# Level 1 sits low-left, level 5 high-right with a modest bleed—ascending,
 # the way elevation should read. Drawn in that order so higher levels overlap
 # lower ones, shadows landing on whatever is beneath. Steps are tight (the
 # favicon's overlap, at card scale) so the whole staircase stays on the page.
@@ -113,7 +113,7 @@ for level in range(1, 6):
         outline=LINE,
         width=S,
     )
-    # The level number, quiet mono in the card's lower-left — the region the
+    # The level number, quiet mono in the card's lower-left—the region the
     # next card never overlaps.
     d.text(
         ((x + 18) * S, (y + CARD - 40) * S),

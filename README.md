@@ -1,6 +1,6 @@
 # Elevation & Shadow Generator
 
-**[depths.studio](https://www.depths.studio)** — a six-level shadow scale from
+**[depths.studio](https://www.depths.studio)**—a six-level shadow scale from
 one light source, mapped to semantic tokens, honest about dark mode, and
 readable by a coding agent.
 
@@ -10,8 +10,8 @@ and [beeps.studio](https://www.beeps.studio).
 
 ## What it does
 
-- Derives a six-level elevation scale — layered key, ambient and optional
-  contact shadows — from a draggable light source and three curves.
+- Derives a six-level elevation scale—layered key, ambient and optional
+  contact shadows—from a draggable light source and three curves.
 - Maps the levels to semantic tokens: `--shadow-raised`, `--shadow-hover`,
   `--shadow-sticky`, `--shadow-dropdown`, `--shadow-modal`, `--shadow-toast`,
   plus an inset `--shadow-pressed`.
@@ -24,7 +24,7 @@ and [beeps.studio](https://www.beeps.studio).
 ## Share links
 
 Every scale is a pure function of the URL. The parameters are plain decimals,
-documented in [`public/llms.txt`](public/llms.txt) — the same file an agent is
+documented in [`public/llms.txt`](public/llms.txt)—the same file an agent is
 pointed at. Fetching any URL returns the complete scale embedded in the HTML
 with no JavaScript required; `/api/shadows` serves the same data as JSON or
 plain text.
@@ -47,7 +47,7 @@ pnpm test         # vitest, src/lib only
 pnpm sync:check   # verify src/shared matches upstream (Ramps Studio)
 ```
 
-`src/shared/` is authored in Ramps Studio and synced here — don't edit it in
+`src/shared/` is authored in Ramps Studio and synced here—don't edit it in
 this repo. See [`CLAUDE.md`](CLAUDE.md) for how this repo works, and
 [`SPEC.md`](SPEC.md) for what it is and why.
 

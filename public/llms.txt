@@ -1,7 +1,7 @@
 # Depths
 
-> Generates a six-level elevation scale of layered box-shadows — a tight key
-> shadow, a soft ambient, an optional contact layer — from one light source and
+> Generates a six-level elevation scale of layered box-shadows—a tight key
+> shadow, a soft ambient, an optional contact layer—from one light source and
 > three curves, mapped to semantic tokens like `shadow-raised` and
 > `shadow-modal`. Honest about dark mode, and a handoff written for a coding
 > agent.
@@ -20,7 +20,7 @@ surface, and the dark-mode values state their own limits.
 
 ## Using this as a tool
 
-Build a URL and fetch it. **You do not need to run JavaScript** — the server
+Build a URL and fetch it. **You do not need to run JavaScript**—the server
 injects the whole scale into the HTML as both a `<pre>` block and a
 `<script type="application/json">`, so a plain fetch of any URL below returns
 readable data. (Both shapes on purpose: HTML-to-markdown conversion strips
@@ -30,30 +30,30 @@ reading this.)
 If you want data without the page around it, `/api/shadows` takes the same
 query string:
 
-- `https://www.depths.studio/api/shadows` — the default scale, as JSON
-- `https://www.depths.studio/api/shadows?format=text` — the same, as plain text
-- `https://www.depths.studio/api/shadows?p=crisp&a=120` — a different scale
+- `https://www.depths.studio/api/shadows`—the default scale, as JSON
+- `https://www.depths.studio/api/shadows?format=text`—the same, as plain text
+- `https://www.depths.studio/api/shadows?p=crisp&a=120`—a different scale
 
 The JSON carries a `version` key, currently `1`. Keys are only ever added, and
-the meaning of an existing key never changes within a version — treat a
+the meaning of an existing key never changes within a version—treat a
 `version` you do not know as a reason to stop rather than to guess.
 
 The page itself takes the same parameters:
 
-- `https://www.depths.studio/` — the default scale
-- `https://www.depths.studio/?p=dramatic` — a different preset
-- `https://www.depths.studio/?a=135&c=1e2a4a` — upper-left light, tinted ink
+- `https://www.depths.studio/`—the default scale
+- `https://www.depths.studio/?p=dramatic`—a different preset
+- `https://www.depths.studio/?a=135&c=1e2a4a`—upper-left light, tinted ink
 
 ### Parameters
 
-All values are plain decimals — no scaling tables, no base64. Anything out of
+All values are plain decimals—no scaling tables, no base64. Anything out of
 range is clamped rather than rejected, an unparseable field is dropped with a
 note on the page (and a `warnings` key in the JSON), and a link always resolves
 to a renderable scale.
 
 | Param | Required | Values | Meaning |
 | --- | --- | --- | --- |
-| `p` | no | `soft` (default), `crisp`, `dramatic`, `hairline` | The preset — a bundle of the five curve values below. |
+| `p` | no | `soft` (default), `crisp`, `dramatic`, `hairline` | The preset—a bundle of the five curve values below. |
 | `a` | no | 0–360 | Light angle in degrees, standard math convention: 90 (default) is overhead, 45 is upper-right, 135 is upper-left. Shadows fall away from the light. Wraps rather than clamps. |
 | `d` | no | 0.25–8 | Distance: the key shadow's offset in px at level 1. The scale's base unit. |
 | `g` | no | 1.1–3 | Growth: per-level multiplier on the offset. `g=1.9` means each level throws ~2x further than the last. |
@@ -62,9 +62,9 @@ to a renderable scale.
 | `f` | no | 0.6–1.2 | Falloff: per-level multiplier on opacity. Below 1, higher levels are more transparent. |
 | `y` | no | `2` or `3` | Layers per level: key + ambient, or with a contact shadow added. |
 | `c` | no | 6 hex digits, no `#` | Tinted shadow ink. Omit for black. |
-| `k` | no | `s` or `sb` (default) | Dark strategy: boosted shadows alone, or shadows plus hairline `--edge-*` borders. |
+| `k` | no | `s` or `sb` (default) | Edges: `s` is shadows alone; `sb` adds hairline `--edge-*` borders in both modes—ink on light, white on dark. |
 | `pu` | no | e.g. `modal5.hover3` | Move tokens to other levels: token short-name then level digit, dot-joined. `none` and `pressed` cannot move. |
-| `xt` | no | e.g. `pressed.toast` | Exclude tokens from export, dot-separated short names. Filters output only — the scale still resolves in full. |
+| `xt` | no | e.g. `pressed.toast` | Exclude tokens from export, dot-separated short names. Filters output only—the scale still resolves in full. |
 
 Curve values omitted from the URL take the chosen preset's values, so a bare
 link is a preset and a parameterized one names exactly its differences.
@@ -75,14 +75,14 @@ Short name is what `pu` and `xt` use; the exported variable is `--shadow-<name>`
 
 | Token | Level | Use when | Not when |
 | --- | --- | --- | --- |
-| `none` | 0 | Inputs, list rows, tables — anything that belongs to the page rather than sitting on it. | Don't use elevation to fix a contrast problem; that's a color decision. |
-| `raised` | 1 | The default for anything that reads as an object: cards, tiles, buttons. | Not for nesting — a raised card inside a raised card flattens both. |
-| `hover` | 2 | On hover or focus of an element that is `raised` at rest, so the lift reads as one step up. | Not as a resting state — if everything is lifted, nothing is. |
-| `sticky` | 2 | Bars that pin over scrolling content, once content actually passes beneath them. | Not while the page sits at the top — a shadow over nothing announces machinery. |
-| `dropdown` | 3 | Transient surfaces summoned from a control: menus, popovers, tooltips. | Not for dialogs that take over the page — that is `modal`'s job. |
-| `modal` | 4 | Surfaces that block the page behind a scrim and hold focus. | Not for toasts — a modal shadow on a toast makes a notification feel like an interruption. |
+| `none` | 0 | Inputs, list rows, tables—anything that belongs to the page rather than sitting on it. | Don't use elevation to fix a contrast problem; that's a color decision. |
+| `raised` | 1 | The default for anything that reads as an object: cards, tiles, buttons. | Not for nesting—a raised card inside a raised card flattens both. |
+| `hover` | 2 | On hover or focus of an element that is `raised` at rest, so the lift reads as one step up. | Not as a resting state—if everything is lifted, nothing is. |
+| `sticky` | 2 | Bars that pin over scrolling content, once content actually passes beneath them. | Not while the page sits at the top—a shadow over nothing announces machinery. |
+| `dropdown` | 3 | Transient surfaces summoned from a control: menus, popovers, tooltips. | Not for dialogs that take over the page—that is `modal`'s job. |
+| `modal` | 4 | Surfaces that block the page behind a scrim and hold focus. | Not for toasts—a modal shadow on a toast makes a notification feel like an interruption. |
 | `toast` | 5 | The top of the stack: transient messages floating over everything. | Never on persistent chrome. The top level is loud because nothing lives there. |
-| `pressed` | inset | Wells, active toggle tracks, pressed states — surfaces pushed below the page. | Not for disabled states; depressed and disabled are different messages. |
+| `pressed` | inset | Wells, active toggle tracks, pressed states—surfaces pushed below the page. | Not for disabled states; depressed and disabled are different messages. |
 
 ## Rules the scale is built on
 
@@ -93,46 +93,46 @@ Worth knowing if you are going to wire these into a product.
 - **Levels are a geometric progression.** Offset and blur grow by `g` per
   level, so the scale reads as one material photographed at different heights,
   not eight unrelated shadows.
-- **One step per interaction.** Hover moves an element exactly one token —
-  raised to hover — never two.
+- **One step per interaction.** Hover moves an element exactly one token—
+  raised to hover—never two.
 - **Don't nest elevation.** The inner surface of a raised card goes back to
   `shadow-none`.
 - **Dark mode is honest, not equivalent.** Alphas are boosted x1.5 (capped at
   0.85) and hairline `--edge-*` borders are added, but elevation on a dark page
   is mostly carried by surface color. Pair these tokens with a lightened
-  surface ramp — https://www.ramps.studio/ generates one — and let the shadow
+  surface ramp—https://www.ramps.studio/ generates one—and let the shadow
   support it.
 - **`pressed` is an inset, outside the scale.** It derives from the base unit,
   not the growth curve: a well does not get deeper when a dropdown gets higher.
 - **Never animate between distant levels.** Raised to hover is designed for;
-  none to modal reads as a glitch — fade the surface in at its final elevation.
+  none to modal reads as a glitch—fade the surface in at its final elevation.
 
 ## Exports
 
 Everything is generated client-side; the endpoints recompute the same pure
 function server-side for readers without JavaScript.
 
-- **CSS** — custom properties, light in `:root`, boosted dark values under
-  `.dark`, plus `--edge-*` hairlines that are transparent in light mode so they
-  can ship unconditionally without shifting layout.
-- **Tailwind** — a v4 `@theme` block. The theme points at intermediate
+- **CSS**—custom properties, light in `:root`, boosted dark values under
+  `.dark`, plus `--edge-*` hairlines in both modes—ink on light, white on
+  dark—so one `border: var(--edge-*)` works whichever theme is active.
+- **Tailwind**—a v4 `@theme` block. The theme points at intermediate
   variables that `.dark` redefines, because `@theme` values are inlined into
   the generated utilities and a plain dark override would change nothing.
-- **JSON (DTCG)** — the W3C composite `shadow` type, for Style Dictionary and
+- **JSON (DTCG)**—the W3C composite `shadow` type, for Style Dictionary and
   similar pipelines. Dark values ride in `$extensions["studio.depths"]`; there
   is deliberately no Figma export, because Figma variables have no shadow type.
-- **Native (SwiftUI)** — an enum of the tokens plus a colorScheme-aware
+- **Native (SwiftUI)**—an enum of the tokens plus a colorScheme-aware
   `.depthsShadow(_:)` modifier that chains the layers. CSS blur converts to
   SwiftUI radius at blur / 2 (stated in the file's own header); the pressed
   inset uses `ShapeStyle.shadow(.inner)`, iOS 16 / macOS 13 and up.
-- **Markdown** — the token table, the CSS, and the rules above, written to be
+- **Markdown**—the token table, the CSS, and the rules above, written to be
   pasted into an agent's context.
 
 ## Other tools in this family
 
 Same contract everywhere: state lives in the query string, every page serves
 its values as plain text without JavaScript, and there is no account, key or
-rate limit. Generated from the shared manifest — see `src/shared/tools.ts`.
+rate limit. Generated from the shared manifest—see `src/shared/tools.ts`.
 
 <!-- FAMILY:START format="list" current="depths" -->
   Ramps    Color scales & semantic tokens  https://www.ramps.studio/

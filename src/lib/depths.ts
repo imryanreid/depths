@@ -3,9 +3,9 @@
 // One light source plus three curves, resolved into
 // a six-level elevation scale of layered shadows.
 //
-// This is the whole tool: everything visible — the
+// This is the whole tool: everything visible—the
 // level ramp, the previews, every export, the agent
-// payload — reads the ResolvedScale this module
+// payload—reads the ResolvedScale this module
 // produces. No consumer recomputes an offset, and
 // there is never a second serialization of a value.
 //
@@ -33,7 +33,7 @@ export type ShadowLayer = {
 }
 
 export type Level = {
-  /** 0–5. Level 0 is flush — no layers. */
+  /** 0–5. Level 0 is flush—no layers. */
   level: number
   layers: ShadowLayer[]
 }
@@ -42,7 +42,7 @@ export type Level = {
 export const DARK = {
   /** Shadows need more ink on a dark surface to read at all. */
   alphaBoost: 1.5,
-  /** Boosted alpha never exceeds this — beyond it a shadow reads as a hole. */
+  /** Boosted alpha never exceeds this—beyond it a shadow reads as a hole. */
   alphaCap: 0.85,
 } as const
 
@@ -79,7 +79,7 @@ export type DepthsConfig = {
   excluded: string[]
 }
 
-/** Clamp ranges. Out-of-range input is clamped rather than rejected — a link
+/** Clamp ranges. Out-of-range input is clamped rather than rejected—a link
  *  always resolves to a renderable scale. */
 export const LIMITS = {
   angle: [0, 360],
@@ -118,13 +118,13 @@ export type ResolvedScale = {
   config: DepthsConfig
   /** The six levels, light-mode alphas. Dark is derived per-layer via darkAlpha(). */
   levels: Level[]
-  /** The inset well — outside the elevation scale, derived from its base unit. */
+  /** The inset well—outside the elevation scale, derived from its base unit. */
   pressed: ShadowLayer[]
   /** The shadow ink. Black unless tinted. */
   tint: Rgb
 }
 
-// The `+ 0` folds IEEE negative zero back to plain zero — cos(90°) is a tiny
+// The `+ 0` folds IEEE negative zero back to plain zero—cos(90°) is a tiny
 // negative number, and without it every overhead shadow gets an x of -0,
 // which is equal to 0 everywhere except Object.is and a reader's eyebrows.
 const round1 = (n: number) => Math.round(n * 10) / 10 + 0
@@ -234,7 +234,7 @@ const pct = (alpha: number) => {
 }
 
 /**
- * Layers → a CSS box-shadow value. THE serialization — every export, the
+ * Layers → a CSS box-shadow value. THE serialization—every export, the
  * preview, and the agent payload call this, so the file you copy is the shadow
  * you saw.
  */
@@ -255,12 +255,15 @@ export function cssValue(layers: ShadowLayer[], tint: Rgb, mode: "light" | "dark
 }
 
 /**
- * The hairline edge that carries elevation where shadows can't. Emitted in
- * both modes so switching themes never shifts layout: transparent on light,
- * faint white on dark, slightly stronger per level.
+ * The hairline edge that carries elevation where shadows can't. Present in
+ * BOTH modes—ink on light, white on dark, the same strength curve—so the
+ * toggle visibly does something whichever theme you're previewing, and the
+ * theme flip never shifts layout. (They were transparent in light originally;
+ * Ry made them two-mode on 2026-09-06.) Dark is still where they carry the
+ * load: a light-mode card usually has a shadow doing the work.
  */
 export function edgeValue(level: number, mode: "light" | "dark"): string {
-  if (mode === "light") return "1px solid transparent"
   const alpha = Math.min(0.06 + level * 0.015, 0.16)
-  return `1px solid rgb(255 255 255 / ${pct(alpha)})`
+  const channel = mode === "dark" ? 255 : 0
+  return `1px solid rgb(${channel} ${channel} ${channel} / ${pct(alpha)})`
 }
