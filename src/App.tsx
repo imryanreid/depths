@@ -274,7 +274,7 @@ function previewStyle(scale: ResolvedScale, tokens: ResolvedToken[]): string {
   for (const t of tokens) {
     light.push(`  --shadow-${t.id}: ${t.lightCss};`)
     dark.push(`  --shadow-${t.id}: ${t.darkCss};`)
-    if (t.effectiveLevel !== 0) {
+    if (t.effectiveLevel !== 0 && t.effectiveLevel !== "inset") {
       light.push(`  --edge-${t.id}: ${edges ? t.edgeLight : NONE};`)
       dark.push(`  --edge-${t.id}: ${edges ? t.edgeDark : NONE};`)
     }

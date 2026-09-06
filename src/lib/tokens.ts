@@ -165,6 +165,10 @@ export function resolveTokens(scale: ResolvedScale): ResolvedToken[] {
           ? Math.min(5, Math.max(0, Math.round(override)))
           : def.level
     const layers = effectiveLevel === "inset" ? pressed : (levels[effectiveLevel]?.layers ?? [])
+    // Edges belong to ELEVATED tokens only: pressed is a well, not a height,
+    // and none is flush—every emitter skips both (Ry's call, 2026-09-06,
+    // after --edge-pressed appeared by construction rather than decision).
+    // The values are still computed here so the full set stays resolved.
     const edgeLevel = effectiveLevel === "inset" ? 1 : effectiveLevel
     return {
       ...def,

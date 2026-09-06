@@ -90,7 +90,14 @@ export default function TokenTable({
                             triggerClassName="border-line hover:bg-ink/[0.04] rounded border px-2 py-0.5 font-mono text-[11px] transition-colors"
                           />
                         ) : (
-                          <span className="text-ash px-2 font-mono text-[11px]">
+                          <span
+                            className="text-ash px-2 font-mono text-[11px]"
+                            title={
+                              t.effectiveLevel === "inset"
+                                ? "Derived from the scale's base unit, not the growth curve—a well doesn't get deeper when a dropdown gets higher. Offset 0.75x distance toward the light, blur 1.5x distance + 1px, opacity 1.3x the base (capped at 50%), drawn inset."
+                                : undefined
+                            }
+                          >
                             {t.effectiveLevel}
                           </span>
                         )}

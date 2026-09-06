@@ -30,6 +30,13 @@ describe("toCss", () => {
     expect(without).not.toContain("--edge-")
   })
 
+  it("gives no edge to pressed or none—edges belong to elevated tokens", () => {
+    const css = toCss(resolve(DEFAULT_CONFIG))
+    expect(css).not.toContain("--edge-pressed")
+    expect(css).not.toContain("--edge-none")
+    expect(toTailwind(resolve(DEFAULT_CONFIG))).not.toContain("--edge-pressed")
+  })
+
   it("respects exclusions", () => {
     const css = toCss(resolve({ ...DEFAULT_CONFIG, excluded: ["toast"] }))
     expect(css).not.toContain("--shadow-toast")
@@ -115,6 +122,13 @@ describe("toAgentMarkdown", () => {
     expect(md).toContain("One step per interaction")
     expect(md).toContain("ramps.studio")
     expect(md).toContain("Other tools in this family")
+  })
+
+  it("names the edited curve fields next to the preset, and stays quiet when stock", () => {
+    const stock = toAgentMarkdown(resolve(DEFAULT_CONFIG), URL)
+    expect(stock).not.toContain("(edited:")
+    const edited = toAgentMarkdown(resolve({ ...DEFAULT_CONFIG, blur: 5.2, opacity: 39 }), URL)
+    expect(edited).toContain("(edited: blur, opacity)")
   })
 
   it("surfaces link warnings", () => {

@@ -36,6 +36,20 @@ describe("buildAgentPayload", () => {
     expect(Array.isArray(damaged.json.warnings)).toBe(true)
   })
 
+  it("flags curve edits against the preset, absently when stock", () => {
+    expect(buildAgentPayload("", ORIGIN).json.presetEdited).toBeUndefined()
+    const edited = buildAgentPayload("?b=5.2&o=39", ORIGIN)
+    expect(edited.json.presetEdited).toEqual(["blur", "opacity"])
+    expect(edited.text).toContain("edited: blur, opacity")
+  })
+
+  it("gives no edge fields to pressed", () => {
+    const { json } = buildAgentPayload("?y=3", ORIGIN)
+    const tokens = json.tokens as { key: string; edgeLight?: string }[]
+    expect(tokens.find((t) => t.key === "pressed")?.edgeLight).toBeUndefined()
+    expect(tokens.find((t) => t.key === "raised")?.edgeLight).toBeDefined()
+  })
+
   it("flags moved and excluded tokens", () => {
     const { json } = buildAgentPayload("?pu=modal5&xt=pressed", ORIGIN)
     const tokens = json.tokens as { key: string; overridden?: boolean; excluded?: boolean }[]

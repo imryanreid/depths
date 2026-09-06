@@ -45,6 +45,23 @@ list below is now clear—next work is whatever Ry points at while iterating.
 
 ## Session log
 
+### 2026-09-06 (evening, cont.)—audit fixes from Ry's export review
+
+Ry exported all five formats and asked for a full alignment audit. Every
+value checked out (recomputed by hand from the URL through the recipe, plus
+a live API cross-check); two observations became fixes:
+
+- **Edited presets say so everywhere now.** The markdown reads
+  "Preset: Soft (edited: blur, opacity)—…", the payload text matches, and
+  the JSON gains an additive `presetEdited` field (version stays 1). The
+  page badge was already honest; the machine surfaces caught up.
+- **Pressed lost its edge.** `--edge-pressed` existed at level-1 strength by
+  construction, not decision; Ry vetoed it. Edges now belong to elevated
+  tokens only—every emitter (CSS, Tailwind, payload, preview) skips inset
+  and none, with the why recorded in tokens.ts.
+- **The "inset" label explains itself on hover**: base-unit derivation,
+  the 0.75x/1.5x+1px/1.3x numbers, and the well-vs-height rationale.
+
 ### 2026-09-06 (evening)—containing extreme scales
 
 Ry flagged settings like d=5.75/g=3 throwing 400px shadows over adjacent

@@ -59,6 +59,14 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
 
   const excluded = tokens.filter((t) => t.excluded).map((t) => t.token)
 
+  // Which curve fields this link moved off the chosen preset. Without it, a
+  // reader of the markdown or this payload could honestly call an edited
+  // scale "the Soft preset"—the page badges "edited", so the machine
+  // surfaces say it too. Additive key; version stays 1.
+  const presetEdited = (Object.keys(preset.params) as (keyof typeof preset.params)[]).filter(
+    (k) => config[k] !== preset.params[k],
+  )
+
   const levels = scale.levels.map((lv) => ({
     level: lv.level,
     css: cssValue(lv.layers, scale.tint, "light"),
@@ -95,6 +103,7 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
       falloff: config.falloff,
       layers: config.layers,
     },
+    ...(presetEdited.length ? { presetEdited } : {}),
     tint: config.tint ?? "000000",
     darkStrategy: config.dark,
     levels,
@@ -112,7 +121,7 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
       // Both edge values when edges are on. `edgeLight` arrived with the
       // two-mode edges (2026-09-06); keys are only ever added, so version
       // stays 1 and a consumer reading only edgeDark keeps working.
-      ...(config.dark === "sb" && t.effectiveLevel !== 0
+      ...(config.dark === "sb" && t.effectiveLevel !== 0 && t.effectiveLevel !== "inset"
         ? { edgeLight: t.edgeLight, edgeDark: t.edgeDark }
         : {}),
       when: t.when,
@@ -131,7 +140,9 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
 
   const lines: string[] = []
   lines.push("DEPTHS—www.depths.studio", "")
-  lines.push(`preset  ${config.presetId} (${preset.name})`)
+  lines.push(
+    `preset  ${config.presetId} (${preset.name})${presetEdited.length ? `; edited: ${presetEdited.join(", ")}` : ""}`,
+  )
   lines.push(`light   ${config.angle} deg—shadows fall toward (${dir.x}, ${dir.y})`)
   lines.push(
     `curves  distance ${config.distance}px, growth x${config.growth}, blur x${config.blur}, opacity ${config.opacity}%, falloff x${config.falloff}, ${config.layers} layers`,
@@ -153,7 +164,7 @@ export function buildAgentPayload(search: string, origin: string): AgentPayload 
     lines.push(`  --${t.token}  (level ${t.effectiveLevel}${flags ? `; ${flags}` : ""})`)
     lines.push(`    value     ${t.lightCss}`)
     lines.push(`    dark      ${t.darkCss}`)
-    if (config.dark === "sb" && t.effectiveLevel !== 0) {
+    if (config.dark === "sb" && t.effectiveLevel !== 0 && t.effectiveLevel !== "inset") {
       lines.push(`    edge      ${t.edgeLight} (light) / ${t.edgeDark} (dark)`)
     }
     lines.push(`    use when  ${t.when}`)
