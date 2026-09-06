@@ -19,24 +19,33 @@ verified against production with real no-JS curls: injection on `/`, head
 rewrite on parameterized URLs, `/api/shadows` JSON + text, decode warnings,
 the llms.txt family block.
 
-**Not yet live on the domain.** `depths.studio` is registered (Ry confirmed)
-but not attached to the Vercel project. Everything in the repo already says
-`www.depths.studio`. The Ramps-side registration is PR
-https://github.com/imryanreid/ramp-generator/pull/25, awaiting Ry.
+**Registered with the family (2026-09-06).**
+https://github.com/imryanreid/ramp-generator/pull/25 merged; `pnpm sync` ran
+from Ramps main. This repo's `sync:check` is green. Beeps committed the sync
+straight to main per its policy; Motion's copy is
+https://github.com/imryanreid/motion-studio/pull/26, awaiting Ry (its branch
+rule). Motion's main checkout carries the same two files as uncommitted synced
+changes — they read as clean automatically once that PR merges and main is
+pulled.
+
+**Domain: attached in Vercel, DNS still at Squarespace.** Both hosts are on
+the Vercel `depths` project, but the nameservers are Squarespace's and
+`www` CNAMEs to `ext-sq.squarespace.com`, so depths.studio still serves a
+parking page. Ry needs to update the records in Squarespace DNS (Vercel's
+Domains tab shows the exact records — A `76.76.21.21` on the apex, CNAME
+`cname.vercel-dns.com` on `www`).
 
 ## To finish the launch
 
-1. **Ry: attach the domain** — add `depths.studio` + `www.depths.studio` to
-   the Vercel project (www as primary; `vercel.json` already 308s the apex).
-2. **Merge the Ramps PR** (`add-depths` branch): the manifest id rename
-   `shape` → `depths` + the ToolMark figure. Until it merges, this repo's
-   `pnpm sync:check` reports drift against Ramps `main` — expected, not a bug.
-3. **After both:** flip the manifest entry to `live` with
-   `wordmark: "depths.studio"`, `domain: "www.depths.studio"` in Ramps, then
-   `git checkout main && git pull && pnpm sync` from Ramps so all four repos
-   agree, rebuild + deploy each so every footer and llms.txt lists Depths as
-   live.
-4. **Verify the agent path against production** with a real no-JS fetch:
+1. **Ry: point DNS at Vercel** in Squarespace's domain settings (above), and
+   merge https://github.com/imryanreid/motion-studio/pull/26.
+2. **Once `www.depths.studio` actually serves this tool:** flip the manifest
+   entry to `live` with `wordmark: "depths.studio"`,
+   `domain: "www.depths.studio"` in Ramps (branch → preview → merge), then
+   `git checkout main && git pull && pnpm sync` from Ramps and commit the sync
+   in each sibling (Motion via PR), so every footer and llms.txt lists Depths
+   as live.
+3. **Verify the agent path against the domain** with a real no-JS fetch:
    `curl 'https://www.depths.studio/?p=crisp' | grep DEPTHS` and
    `curl 'https://www.depths.studio/api/shadows?format=text'`.
 
