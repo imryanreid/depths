@@ -145,8 +145,10 @@ Ramps Studio and `pnpm sync` — one commit.
 ## Pushing
 
 **Straight to production, every change** — the Beeps exception, for the same
-reason: low visibility while new, and the gate below is what stands between a
-bad commit and the live site. Revisit when the domain has real traffic.
+reason: low visibility, and the gate below is what stands between a bad commit
+and the live site. Ry confirmed this policy holds post-launch (2026-09-06,
+the day the domain went live): commit to `main`, push, deploy — no branch, no
+preview, no waiting to be looked at.
 
 ```bash
 pnpm build && pnpm test && pnpm sync:check
