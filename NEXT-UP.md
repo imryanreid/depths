@@ -19,35 +19,20 @@ verified against production with real no-JS curls: injection on `/`, head
 rewrite on parameterized URLs, `/api/shadows` JSON + text, decode warnings,
 the llms.txt family block.
 
-**Registered with the family (2026-09-06).**
-https://github.com/imryanreid/ramp-generator/pull/25 merged; `pnpm sync` ran
-from Ramps main. This repo's `sync:check` is green. Beeps committed the sync
-straight to main per its policy; Motion's copy is
-https://github.com/imryanreid/motion-studio/pull/26, awaiting Ry (its branch
-rule). Motion's main checkout carries the same two files as uncommitted synced
-changes — they read as clean automatically once that PR merges and main is
-pulled.
+**LIVE at https://www.depths.studio (2026-09-06).** The launch completed
+end-to-end: family registration (ramp-generator#25) and the live flip
+(ramp-generator#26) merged; DNS points at Vercel from Squarespace's
+authoritative nameservers; the apex 308s to www. Every sibling synced,
+committed and redeployed (Beeps and this repo straight to main, Motion via
+motion-studio#26 and #27 on Ry's blanket go-ahead) — all four llms.txt family
+blocks and footers now link Depths as live. Verified with no-JS fetches
+against the domain: the page injects the scale, `/api/shadows` answers in
+JSON and text. `sync:check` green in all four repos.
 
-**Domain: attached in Vercel, DNS still at Squarespace.** Both hosts are on
-the Vercel `depths` project, but the nameservers are Squarespace's and
-`www` CNAMEs to `ext-sq.squarespace.com`, so depths.studio still serves a
-parking page. Ry needs to update the records in Squarespace DNS (Vercel's
-Domains tab shows the exact records — A `76.76.21.21` on the apex, CNAME
-`cname.vercel-dns.com` on `www`).
+## Next
 
-## To finish the launch
-
-1. **Ry: point DNS at Vercel** in Squarespace's domain settings (above), and
-   merge https://github.com/imryanreid/motion-studio/pull/26.
-2. **Once `www.depths.studio` actually serves this tool:** flip the manifest
-   entry to `live` with `wordmark: "depths.studio"`,
-   `domain: "www.depths.studio"` in Ramps (branch → preview → merge), then
-   `git checkout main && git pull && pnpm sync` from Ramps and commit the sync
-   in each sibling (Motion via PR), so every footer and llms.txt lists Depths
-   as live.
-3. **Verify the agent path against the domain** with a real no-JS fetch:
-   `curl 'https://www.depths.studio/?p=crisp' | grep DEPTHS` and
-   `curl 'https://www.depths.studio/api/shadows?format=text'`.
+Nothing blocking. The tool is live and the family agrees. Remaining niceties
+are the known gaps below (OG card first, whenever it feels worth a session).
 
 ## Known gaps / deliberate omissions
 
