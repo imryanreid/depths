@@ -45,6 +45,28 @@ list below is now clear—next work is whatever Ry points at while iterating.
 
 ## Session log
 
+### 2026-09-06 (evening)—containing extreme scales
+
+Ry flagged settings like d=5.75/g=3 throwing 400px shadows over adjacent
+levels and the token table. Aligned on the fix before building (his lean,
+my rec): a **uniform preview zoom**, never per-card—per-card scaling would
+flatten the level progression exactly when it's most extreme, and the ramp's
+whole job is comparison at one scale.
+
+- `shadowReach()` in `depths.ts`: offset + blur/2 per side (the penumbra
+  straddles the edge—counting full blur made stock Soft zoom to 0.8x, caught
+  in verification).
+- LevelRamp scales all five cards by one factor when the worst reach exceeds
+  a 128px spill budget—calibrated just above stock Dramatic's ~118px so no
+  untouched preset ever zooms, with a test holding that line if preset
+  numbers change. Continuous, downward from 1 only, stated in the header as
+  "preview at 0.34x" only when engaged. True pixel values stay in the labels;
+  the zoom is a viewing condition, and nothing machine-readable changes.
+- A clipped stage around the grid (negative margins repaid as padding, so
+  normal shadows and the hover lift never meet the boundary) guarantees what
+  the reach estimate can't; Scenario cells got overflow-hidden for the same
+  reason.
+
 ### 2026-09-06 (later still)—Ry's first polish pass
 
 Five items from playing with the live tool, one push:

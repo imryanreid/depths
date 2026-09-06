@@ -5,12 +5,14 @@
 // serialization every consumer reads.
 // ==============================================
 import { describe, expect, it } from "vitest"
+import { PRESETS } from "./presets.js"
 import {
   DARK,
   DEFAULT_CONFIG,
   cssValue,
   darkAlpha,
   edgeValue,
+  shadowReach,
   parseTint,
   resolve,
   shadowDirection,
@@ -121,6 +123,38 @@ describe("cssValue", () => {
 
   it("returns none for no layers", () => {
     expect(cssValue([], black, "light")).toBe("none")
+  })
+})
+
+describe("shadowReach", () => {
+  it("counts offset plus half the blur per side—the penumbra straddles the edge", () => {
+    const r = shadowReach([{ x: 0, y: 10, blur: 30, spread: 0, alpha: 0.1, role: "key" }])
+    expect(r).toEqual({ top: 5, right: 15, bottom: 25, left: 15 })
+  })
+
+  it("takes the worst layer per side and ignores insets", () => {
+    const r = shadowReach([
+      { x: -5, y: 5, blur: 10, spread: 0, alpha: 0.1, role: "key" },
+      { x: 0, y: 100, blur: 50, spread: 0, alpha: 0.1, role: "ambient" },
+      { x: 0, y: 999, blur: 999, spread: 0, alpha: 0.1, role: "key", inset: true },
+    ])
+    expect(r.bottom).toBe(125)
+    // The ambient's bare half-blur (25) out-reaches the key's offset + half-blur (10).
+    expect(r.left).toBe(25)
+  })
+
+  it("stays under the preview's spill budget for every stock preset", () => {
+    // The zoom in LevelRamp must never engage on an untouched preset; its
+    // tolerance (128) is calibrated against the worst stock reach, which is
+    // Dramatic's. This is the assertion that keeps that true if a preset's
+    // numbers ever change.
+    for (const id of ["soft", "crisp", "dramatic", "hairline"] as const) {
+      const scale = resolve({ ...DEFAULT_CONFIG, presetId: id, ...PRESETS[id].params })
+      for (const lv of scale.levels) {
+        const r = shadowReach(lv.layers)
+        expect(Math.max(r.top, r.right, r.bottom, r.left)).toBeLessThanOrEqual(128)
+      }
+    }
   })
 })
 

@@ -58,8 +58,10 @@ function Lines({ n = 2, w = [70, 45] }: { n?: number; w?: number[] }) {
 }
 
 function Cell({ label, children }: { label: string; children: ReactNode }) {
+  // overflow-hidden: at extreme settings a mock's shadow can outgrow its cell;
+  // the border makes the clip read as a frame, not a bug.
   return (
-    <div className="border-line rounded-lg border p-4">
+    <div className="border-line overflow-hidden rounded-lg border p-4">
       <p className="text-ash mb-3 font-mono text-[11px]">{label}</p>
       {children}
     </div>

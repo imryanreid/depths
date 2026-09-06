@@ -255,6 +255,33 @@ export function cssValue(layers: ShadowLayer[], tint: Rgb, mode: "light" | "dark
 }
 
 /**
+ * How far a set of layers visually reaches beyond its box, per side, in px.
+ *
+ * Blur is counted at half its radius: per spec the penumbra straddles the
+ * shifted edge—half inside, half outside—so offset + blur/2 is where the
+ * fade actually ends. Still an estimate of a soft gradient, which is why the
+ * preview that uses this also clips its stage: the container guarantees what
+ * an estimate can't. Insets reach inward and are ignored.
+ */
+export function shadowReach(layers: ShadowLayer[]): {
+  top: number
+  right: number
+  bottom: number
+  left: number
+} {
+  const out = { top: 0, right: 0, bottom: 0, left: 0 }
+  for (const l of layers) {
+    if (l.inset) continue
+    const b = l.blur / 2
+    out.right = Math.max(out.right, round1(l.x + b))
+    out.left = Math.max(out.left, round1(-l.x + b))
+    out.bottom = Math.max(out.bottom, round1(l.y + b))
+    out.top = Math.max(out.top, round1(-l.y + b))
+  }
+  return out
+}
+
+/**
  * The hairline edge that carries elevation where shadows can't. Present in
  * BOTH modes—ink on light, white on dark, the same strength curve—so the
  * toggle visibly does something whichever theme you're previewing, and the
