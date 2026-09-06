@@ -12,7 +12,14 @@
 // Dictionary and friends) actually consume.
 // ==============================================
 import ExportPanel, { type ExportFormat } from "../shared/components/ExportPanel"
-import { agentPrompt, toAgentMarkdown, toCss, toDtcg, toTailwind } from "../lib/export"
+import {
+  agentPrompt,
+  toAgentMarkdown,
+  toCss,
+  toDtcg,
+  toNative,
+  toTailwind,
+} from "../lib/export"
 import type { ResolvedScale } from "../lib/depths"
 
 export default function DepthsExport({
@@ -59,6 +66,18 @@ export default function DepthsExport({
         summary: "DTCG — dark values ride in $extensions",
         detail:
           'W3C DTCG\'s composite shadow type, for Style Dictionary and similar pipelines. DTCG has no notion of modes, so dark values travel under $extensions["studio.depths"], and the inset flag on shadow-pressed is a recent addition some consumers ignore. There is no Figma tab because Figma variables have no shadow type — importing this file there has nothing to attach to.',
+      },
+    },
+    {
+      id: "native",
+      label: "Native",
+      filename: "DepthsShadows.swift",
+      mime: "text/plain",
+      render: () => toNative(scale, url),
+      fidelity: {
+        summary: "Radius is blur ÷ 2 — the conversion is stated, not hidden",
+        detail:
+          "SwiftUI's shadow radius is roughly the Gaussian sigma, so CSS blur converts at half; points equal px at 1x. Chained .shadow() calls compose, so the layers survive intact, and this scale never emits spread — the one thing SwiftUI couldn't represent. The pressed inset uses ShapeStyle.shadow(.inner), which floors that one piece at iOS 16 / macOS 13.",
       },
     },
     {

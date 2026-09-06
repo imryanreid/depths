@@ -7,18 +7,18 @@
 
 ## Root
 
-| File                              | What it does                                                                                                            |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `index.html`                      | The page shell: title, meta, JSON-LD, icons, the pre-paint theme script. No og:image yet — deliberate, see the comment. |
-| `middleware.ts`                   | Rewrites `/` (only) to `/api/render`, so agents without JavaScript get a readable page.                                 |
-| `vercel.json`                     | One job: apex → www 308 redirect, version-controlled.                                                                   |
-| `vite.config.ts`                  | React + Tailwind plugins, React deduping, `base: "./"` so `dist/` runs from `file://`.                                  |
-| `tsconfig.json`                   | Strict TypeScript, `noEmit`; includes `src`, `api`, `middleware.ts`.                                                    |
-| `package.json`                    | Scripts and dependencies. `build` = llms family block + `tsc` + Vite.                                                   |
-| `.mise.toml`                      | Pins Node 22 and pnpm.                                                                                                  |
-| `.prettierrc` / `.prettierignore` | The family's Prettier setup.                                                                                            |
-| `.git-blame-ignore-revs`          | Formatting-only commits, hidden from blame.                                                                             |
-| `LICENSE`                         | MIT.                                                                                                                    |
+| File                              | What it does                                                                            |
+| --------------------------------- | --------------------------------------------------------------------------------------- |
+| `index.html`                      | The page shell: title, meta, JSON-LD, icons, OG card tags, the pre-paint theme script.  |
+| `middleware.ts`                   | Rewrites `/` (only) to `/api/render`, so agents without JavaScript get a readable page. |
+| `vercel.json`                     | One job: apex → www 308 redirect, version-controlled.                                   |
+| `vite.config.ts`                  | React + Tailwind plugins, React deduping, `base: "./"` so `dist/` runs from `file://`.  |
+| `tsconfig.json`                   | Strict TypeScript, `noEmit`; includes `src`, `api`, `middleware.ts`.                    |
+| `package.json`                    | Scripts and dependencies. `build` = llms family block + `tsc` + Vite.                   |
+| `.mise.toml`                      | Pins Node 22 and pnpm.                                                                  |
+| `.prettierrc` / `.prettierignore` | The family's Prettier setup.                                                            |
+| `.git-blame-ignore-revs`          | Formatting-only commits, hidden from blame.                                             |
+| `LICENSE`                         | MIT.                                                                                    |
 
 ## Docs
 
@@ -46,7 +46,7 @@
 | `presets.ts` | The four presets as declarative parameter bundles.                                                                                             |
 | `tokens.ts`  | The semantic token table with when/when-not, `resolveTokens()`, `exportedTokens()`.                                                            |
 | `params.ts`  | The URL contract: encode (diffs only), decode (defensive), `decodeWarnings`.                                                                   |
-| `export.ts`  | The exporters: `toCss`, `toTailwind`, `toDtcg`, `toAgentMarkdown`, `agentPrompt`.                                                              |
+| `export.ts`  | The exporters: `toCss`, `toTailwind`, `toDtcg`, `toNative`, `toAgentMarkdown`, `agentPrompt`.                                                  |
 | `agent.ts`   | The machine payload (JSON + plain text) both API functions serve; `publicOrigin`.                                                              |
 | `site.ts`    | `SITE_URL` — the canonical origin share links are built from.                                                                                  |
 | `*.test.ts`  | Vitest suites: model math, URL round-trips, exporter output, payload shape, the no-JS render path.                                             |
@@ -62,7 +62,7 @@
 | `TokenTable.tsx`  | The semantic mapping: level pickers, export checkboxes, copy per row.                                                             |
 | `Scenarios.tsx`   | Token previews on the surfaces they're named for — card, dropdown, sticky, modal, toast, pressed. Runs on the exported variables. |
 | `AgentData.tsx`   | The always-mounted, height-animated machine-readable block.                                                                       |
-| `ExportPanel.tsx` | This tool's formats handed to the shared panel: CSS, Tailwind, DTCG JSON, Markdown.                                               |
+| `ExportPanel.tsx` | This tool's formats handed to the shared panel: CSS, Tailwind, DTCG JSON, Native (SwiftUI), Markdown.                             |
 
 ### src/shared/
 
@@ -71,10 +71,11 @@ edited here.
 
 ## scripts/
 
-| File             | What it does                                                                                                    |
-| ---------------- | --------------------------------------------------------------------------------------------------------------- |
-| `sync-shared.sh` | Pulls `src/shared/` from Ramps Studio; `--check` diffs and exits non-zero on drift.                             |
-| `build-icons.py` | Renders `public/favicon.svg` + the PNG fallbacks from one description of the stacked-planes shape. Pure stdlib. |
+| File             | What it does                                                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `sync-shared.sh` | Pulls `src/shared/` from Ramps Studio; `--check` diffs and exits non-zero on drift.                                               |
+| `build-icons.py` | Renders `public/favicon.svg` + the PNG fallbacks from one description of the stacked-planes shape. Pure stdlib.                   |
+| `build-og.py`    | Renders `public/og.png` — the share card, five cards climbing the real scale. Run by hand with the system python (it has Pillow). |
 
 ## public/
 
@@ -84,6 +85,7 @@ edited here.
 | `robots.txt`                                            | Permissive, addresses agents directly, points at llms.txt.                                               |
 | `sitemap.xml`                                           | The one indexable URL.                                                                                   |
 | `favicon.svg` / `icon-192.png` / `apple-touch-icon.png` | The stacked-planes mark, generated by `scripts/build-icons.py`.                                          |
+| `og.png`                                                | The static share card, generated by `scripts/build-og.py`.                                               |
 
 ## api/
 

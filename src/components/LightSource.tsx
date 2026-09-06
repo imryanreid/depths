@@ -38,9 +38,19 @@ export default function LightSource({
     (e: PointerEvent | React.PointerEvent) => {
       const rect = ref.current?.getBoundingClientRect()
       if (!rect) return
-      onChange(
-        angleFrom(rect.left + rect.width / 2, rect.top + rect.height / 2, e.clientX, e.clientY),
+      const raw = angleFrom(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2,
+        e.clientX,
+        e.clientY,
       )
+      // A magnet on the eight compass points: within 5°, the puck lands on the
+      // point exactly. 88 and 90 are indistinguishable shadows, but 90 encodes
+      // to nothing (it is the default) and reads as a decision rather than a
+      // wobble. Shift drags free; the arrow keys still move in 3° steps for
+      // anyone who wants the in-between on purpose.
+      const snapped = Math.round(raw / 45) * 45
+      onChange(!e.shiftKey && Math.abs(raw - snapped) <= 5 ? snapped % 360 : raw)
     },
     [onChange],
   )

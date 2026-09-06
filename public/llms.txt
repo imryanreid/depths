@@ -121,6 +121,10 @@ function server-side for readers without JavaScript.
 - **JSON (DTCG)** — the W3C composite `shadow` type, for Style Dictionary and
   similar pipelines. Dark values ride in `$extensions["studio.depths"]`; there
   is deliberately no Figma export, because Figma variables have no shadow type.
+- **Native (SwiftUI)** — an enum of the tokens plus a colorScheme-aware
+  `.depthsShadow(_:)` modifier that chains the layers. CSS blur converts to
+  SwiftUI radius at blur / 2 (stated in the file's own header); the pressed
+  inset uses `ShapeStyle.shadow(.inner)`, iOS 16 / macOS 13 and up.
 - **Markdown** — the token table, the CSS, and the rules above, written to be
   pasted into an agent's context.
 

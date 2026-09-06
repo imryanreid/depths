@@ -42,10 +42,11 @@
 
     <!--
       Social unfurls. og:site_name is the brand; og:title matches <title>.
-      There is deliberately NO og:image and no twitter:card yet — no card asset
-      exists, and a card tag aimed at a 404 is worse than no card tag. Add both
-      together when the share image is designed (Motion's build-og.py or Beeps'
-      build-og.md are the patterns to steal).
+      The card is static, like Motion's — a shadow scale doesn't unfurl
+      per-configuration the way a palette does, and a dynamic card would mean
+      pulling in @vercel/og for a picture that would look near-identical every
+      time. Regenerate with scripts/build-og.py (system python — it has
+      Pillow) if the scale or the wording changes.
     -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Depths" />
@@ -58,6 +59,15 @@
       property="og:description"
       content="A six-level elevation scale of layered box-shadows from one light source, mapped to semantic tokens — shadow-raised, shadow-dropdown, shadow-modal — with honest dark-mode values. Exports as CSS variables, a Tailwind v4 theme, DTCG design tokens, or markdown for a coding agent."
     />
+    <meta property="og:image" content="https://www.depths.studio/og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Depths — Elevation & Shadow Generator. Five paper cards climbing a staircase, each casting a longer, softer shadow than the last."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
 
     <!--
       Machine-readable, and deliberately specific about the part that matters:

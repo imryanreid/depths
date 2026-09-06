@@ -31,21 +31,45 @@ JSON and text. `sync:check` green in all four repos.
 
 ## Next
 
-Nothing blocking. The tool is live and the family agrees. Remaining niceties
-are the known gaps below (OG card first, whenever it feels worth a session).
+Nothing blocking. The tool is live, the family agrees, and the launch-gap
+list below is now clear — next work is whatever Ry points at while iterating.
 
 ## Known gaps / deliberate omissions
 
-- **No OG image / twitter card** — no asset exists yet; the head comment says
-  to add both together. Steal Motion's `build-og.py` pattern.
-- **No native (SwiftUI) export** — deferred to v2, see SPEC §2; SwiftUI's
-  `.shadow()` is single-layer so a faithful export is a view-modifier stack.
-- **Spread is always 0** — a deliberate v1 simplification, SPEC §11.
+- **Spread is always 0** — a deliberate simplification, held after review on
+  2026-09-06: the ambient layer already does spread's softening job, and every
+  added parameter is another thing an agent must understand. SPEC §11.
 - **Slider styling** is the one raw-CSS block (`.depths-slider` in
   `index.css`) — vendor pseudo-elements, same class of exception as Ramps'
   `.ramp-picker`.
 
 ## Session log
+
+### 2026-09-06 (later) — the launch-gap round
+
+All three open candidates shipped in one straight-to-prod push:
+
+- **OG card** — `scripts/build-og.py` (system python; it has Pillow, like
+  Motion's). Family lockup left; on the right, five paper cards climbing the
+  scale with shadows computed by the real layer recipe on the **Dramatic**
+  preset — the one presets.ts itself describes as built for hero moments —
+  at print scale (ratios honest, absolute values ×1.6). `og:image` +
+  `twitter:card` wired together, per the head comment's own rule.
+- **Light-dial snapping** — a 5° magnet on the eight compass points; Shift
+  drags free; arrow keys still step 3°. Verified in the DOM: 87→90, 60 stays,
+  133→135, Shift+133→133, 357→0.
+- **Native (SwiftUI) export** — fifth tab: `toNative` emits an enum + a
+  colorScheme-aware chained-shadow ViewModifier, blur→radius at ÷2 stated in
+  the generated header, pressed via `ShapeStyle.shadow(.inner)` behind an
+  iOS 16/macOS 13 floor, edges as opacities. The generated file passes
+  `xcrun swiftc -typecheck` — compiled, not assumed. 61 tests.
+
+One tooling note for future sessions: a hidden Browser pane freezes
+animation-frame-driven UI (AnimatePresence tab swaps appear "stuck"); it is
+an artifact of driving an unwatched pane, not a bug — front the tab or force
+frames before concluding anything.
+
+## Session log (earlier)
 
 ### 2026-08-28 — v1 built from scratch
 

@@ -54,10 +54,12 @@ four exports (CSS, Tailwind v4, DTCG JSON, agent markdown); and the agent
 surfaces (`api/render`, `/api/shadows`, `llms.txt`, JSON-LD, the on-page
 block).
 
-**Deferred to v2:** a native export (SwiftUI's `.shadow()` is single-layer, so
-a faithful export needs a small view-modifier stack — real work, deferred
-rather than shipped shallow); an OG share card; scroll-linked or cursor-linked
-light previews; per-level manual overrides of individual layer values.
+**Shipped after launch (2026-09-06):** the native export (a SwiftUI
+view-modifier stack that chains the layers — see §7) and the OG share card
+(`scripts/build-og.py`, the real layer recipe rendered at print scale).
+
+**Deferred to v2:** scroll-linked or cursor-linked light previews; per-level
+manual overrides of individual layer values.
 
 **Out of scope entirely:** drop-shadow filters for irregular shapes; elevation
 _animation_ tokens (that is Motion's domain — the markdown's rule about never
@@ -164,6 +166,13 @@ byte-for-byte what you download.
   has no modes; `inset` is flagged with the note that some consumers ignore it.
   **There is deliberately no Figma tab**: Figma variables have no shadow type,
   so a Figma tab would be the quiet lie Motion refused to ship for easings.
+- **Native (SwiftUI)** — an enum of the tokens and a colorScheme-aware
+  `.depthsShadow(_:)` ViewModifier chaining the layers. Conversions are stated
+  in the generated file's own header: blur → radius at ÷2, points = px at 1x.
+  Spread would not survive (SwiftUI has none) and this scale never emits one —
+  nothing lost rather than something hidden. The pressed inset uses
+  `ShapeStyle.shadow(.inner)`, the one real inner shadow SwiftUI has, flooring
+  that piece at iOS 16 / macOS 13.
 - **Markdown** — the token table with when/when-not, the CSS, the rules, and
   the regenerate contract, written to be pasted into an agent's context.
 
@@ -208,7 +217,15 @@ Taken, with reasons above: derived-not-authored levels (§3); no Figma tab
 `pressed` in v1 but outside the scale (§3); plain-decimal params (§9); the
 `shape` → `depths` manifest rename (the last cheap moment).
 
-Open: whether the light dial should snap to the eight compass points; whether
-a `spread` control earns its place (v1 keeps spread at 0 — every added
-parameter is another thing an agent must understand); the OG card; the native
-export's shape.
+Settled after launch (2026-09-06): the light dial magnet-snaps within 5° of
+the eight compass points (Shift drags free; arrow keys still step 3°) — 88°
+and 90° are indistinguishable shadows, but 90 encodes to nothing and reads as
+a decision; the OG card renders the real recipe on the Dramatic preset, the
+one presets.ts itself describes as built for hero moments; the native export
+is an enum plus a chained-shadow ViewModifier with the blur/2 conversion
+stated in its own header (§7).
+
+Still open, deliberately: whether a `spread` control earns its place. v1 keeps
+spread at 0 — every added parameter is another thing an agent must
+understand, and the ambient layer already does the softening work spread
+would. Revisit only if real use argues for it.

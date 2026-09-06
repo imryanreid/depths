@@ -6,7 +6,7 @@
 // ==============================================
 import { describe, expect, it } from "vitest"
 import { DEFAULT_CONFIG, resolve } from "./depths.js"
-import { toAgentMarkdown, toCss, toDtcg, toTailwind } from "./export.js"
+import { toAgentMarkdown, toCss, toDtcg, toNative, toTailwind } from "./export.js"
 
 const URL = "https://www.depths.studio/?p=crisp"
 
@@ -67,6 +67,43 @@ describe("toDtcg", () => {
   it("carries the tint into the hex", () => {
     const parsed = JSON.parse(toDtcg(resolve({ ...DEFAULT_CONFIG, tint: "1e2a4a" }), URL))
     expect(parsed.shadow.raised.$value[0].color.startsWith("#1e2a4a")).toBe(true)
+  })
+})
+
+describe("toNative", () => {
+  it("emits the enum, the modifier, and the stated blur/2 conversion", () => {
+    const swift = toNative(resolve(DEFAULT_CONFIG), URL)
+    expect(swift).toContain("public enum DepthsShadow")
+    expect(swift).toContain("case raised, hover, sticky, dropdown, modal, toast")
+    expect(swift).toContain("func depthsShadow(_ token: DepthsShadow)")
+    expect(swift).toContain("CSS blur becomes SwiftUI radius at blur / 2")
+    // Default soft level 1: key blur 2.6 → radius 1.3, alpha 0.07 / dark 0.105.
+    expect(swift).toContain(
+      "case .raised: return [Layer(light: 0.07, dark: 0.105, radius: 1.3, x: 0, y: 1)",
+    )
+  })
+
+  it("carries the pressed inner shadow behind its availability floor", () => {
+    const swift = toNative(resolve(DEFAULT_CONFIG), URL)
+    expect(swift).toContain("@available(iOS 16.0, macOS 13.0, *)")
+    expect(swift).toContain(".inner(")
+  })
+
+  it("drops the pressed extension when the token is excluded", () => {
+    const swift = toNative(resolve({ ...DEFAULT_CONFIG, excluded: ["pressed"] }), URL)
+    expect(swift).not.toContain(".inner(")
+  })
+
+  it("omits edge opacities under the shadows-only dark strategy", () => {
+    const withEdges = toNative(resolve(DEFAULT_CONFIG), URL)
+    const without = toNative(resolve({ ...DEFAULT_CONFIG, dark: "s" }), URL)
+    expect(withEdges).toContain("edgeOpacity")
+    expect(without).not.toContain("edgeOpacity")
+  })
+
+  it("carries the tint into the ink color", () => {
+    const swift = toNative(resolve({ ...DEFAULT_CONFIG, tint: "1e2a4a" }), URL)
+    expect(swift).toContain("static let ink = Color(red: 0.118, green: 0.165, blue: 0.29)")
   })
 })
 
